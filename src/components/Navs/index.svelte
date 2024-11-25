@@ -1,6 +1,7 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
-  import { selectedNav, setSelectedNav } from "./selected-nav.svelte";
+  import { getSelectedNav, setSelectedNav } from "./selected-nav.svelte";
+  const selectedNav = getSelectedNav();
   const navs = [
     {
       path: "/",

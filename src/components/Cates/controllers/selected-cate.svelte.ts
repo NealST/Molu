@@ -1,7 +1,9 @@
 let selectedCate = $state("");
 
-const setSelectedCate = function(newCate: string) {
-  selectedCate = newCate;
+export const getSelectedCate = function() {
+  return selectedCate;
 }
 
-export { selectedCate, setSelectedCate }
+export const setSelectedCate = function(newCate: string) {
+  selectedCate = newCate;
+}

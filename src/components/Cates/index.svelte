@@ -3,13 +3,15 @@
   import Icon from "@iconify/svelte";
   import getCates from "./controllers/get-cates";
   import createCate from "./controllers/create-cate";
-  import { selectedNav } from "@/components/Navs/selected-nav.svelte";
+  import { getSelectedNav } from "@/components/Navs/selected-nav.svelte";
   import {
-    selectedCate,
+    getSelectedCate,
     setSelectedCate,
   } from "./controllers/selected-cate.svelte";
+  const selectedNav = getSelectedNav();
+  const selectedCate = getSelectedCate();
   let dataSource = $state.raw([] as ICateItem[]);
-  let newCateName = "";
+  let newCateName = $state("");
 
   $effect(() => {
     getCates(selectedNav).then((ret) => {

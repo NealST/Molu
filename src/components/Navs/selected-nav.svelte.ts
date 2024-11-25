@@ -2,8 +2,10 @@ import { NOTES } from '@/constants';
 
 let selectedNav = $state(NOTES);
 
-const setSelectedNav = function(navName: string) {
-  selectedNav = navName;
+export const getSelectedNav = function() {
+  return selectedNav;
 }
 
-export {selectedNav, setSelectedNav};
+export const setSelectedNav = function(navName: string) {
+  selectedNav = navName;
+}
