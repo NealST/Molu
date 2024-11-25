@@ -68,14 +68,14 @@
 <div class="articles">
   <div class="articles-action">
     <input class="action-input" />
-    <Icon icon="mdi-light:file-plus" onclick={handleAddFile} />
+    <Icon icon="mdi-light:file-plus" style="font-size: var(--icon-size);color: var(--font-color);" onclick={handleAddFile} />
   </div>
   <div class="articles-list">
     {#each dataSource as articleItem}
       {@const articleName = articleItem.name}
       {@const isSelected = articleName === selectedArticle}
       <button class={`article-item ${isSelected ? "article-item-selected" : ""}`} onclick={() => setSelectedArticle(articleName)}>
-        <Icon icon="mdi-light:file" />
+        <Icon icon="mdi-light:file" style="font-size: var(--icon-size);color: var(--font-color);" />
         {#if articleItem.type === "input"}
           <input
             class="item-input"

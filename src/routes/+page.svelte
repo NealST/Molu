@@ -31,7 +31,8 @@
 }
 
 :root {
-  --font-color: #262626;
+  --font-color: #fff;
+  --icon-size: 20px;
 }
 
 .container {
@@ -40,7 +41,7 @@
 }
 
 .sidebar {
-  width: 200px;
+  width: 150px;
   height: 100vh;
 }
 

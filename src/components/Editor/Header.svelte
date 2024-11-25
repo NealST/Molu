@@ -12,16 +12,16 @@
   </div>
   <div class="header-action">
     <div class="action-item">
-      <Icon icon="mdi-light:presentation-play" />
+      <Icon icon="mdi-light:presentation-play" style="font-size: var(--icon-size);color: var(--font-color);" />
     </div>
     <div class="action-item">
-      <Icon icon="mdi-light:crop-free" />
+      <Icon icon="mdi-light:crop-free" style="font-size: var(--icon-size);color: var(--font-color);" />
     </div>
     <div class="action-item">
-      <Icon icon="mdi-light:logout" />
+      <Icon icon="mdi-light:logout" style="font-size: var(--icon-size);color: var(--font-color);" />
     </div>
     <div class="action-item">
-      <Icon icon="mdi-light:delete" />
+      <Icon icon="mdi-light:delete" style="font-size: var(--icon-size);color: var(--font-color);" />
     </div>
   </div>
 </div>
@@ -39,7 +39,6 @@
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
   font-size: 14px;
-  background-color: #fff;
   padding-left: 16px;
   padding-right: 16px;
 }

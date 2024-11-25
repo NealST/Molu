@@ -69,7 +69,7 @@
     <span class="header-label">{selectedNav}</span>
     <Icon
       icon="mdi-light:folder-plus"
-      style="font-size: 14px;color: var(--font-color)"
+      style="font-size: var(--icon-size);color: var(--font-color);"
       on:click={handleAddCate}
     />
   </div>
@@ -110,6 +110,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     padding-left: 10px;
     padding-right: 10px;
   }

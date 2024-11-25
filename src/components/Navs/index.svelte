@@ -18,25 +18,32 @@
   ];
 </script>
 
-<ul class="sidebar-navs">
+<div class="sidebar-navs">
   {#each navs as nav}
     {@const isSelected = selectedNav === nav.name}
-    <li class="nav-item">
+    <div class="nav-item">
       <a
         class={`nav-item-button ${isSelected ? "nav-item-selected" : ""}`}
         use:link={nav.path}
         href={nav.path}
         onclick={() => setSelectedNav(nav.name)}>{nav.name}</a
       >
-    </li>
+    </div>
   {/each}
-</ul>
+</div>
 
 <style>
   .sidebar-navs {
     list-style: none;
+    padding-left: 10px;
+    margin-bottom: 20px;
   }
   .nav-item {
     list-style: none;
+  }
+  .nav-item-button {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
   }
 </style>
