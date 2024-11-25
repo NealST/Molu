@@ -1,3 +1,3 @@
-<div>Home...</div>
-
 <script></script>
+
+<div>Home...</div>

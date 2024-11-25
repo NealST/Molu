@@ -9,10 +9,3 @@ export interface ICateItem {
   // cate name
   name: string;
 }
-
-export interface IProps {
-  // current selected nav
-  navInfo: INav;
-  // select a cate
-  onCateSelect: (catePath: string) => void;
-}

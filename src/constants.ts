@@ -2,4 +2,4 @@
 
 export const APP_PATH = 'Molu';
 
-export const NOTES_PATH = 'Notes';
+export const NOTES = 'Notes';

@@ -1,20 +1,14 @@
 <script lang="ts">
   import Router from 'svelte-spa-router';
   import routes from './routes';
-  import Navs from '@/components/Navs.svelte';
+  import Navs from '@/components/Navs/index.svelte';
   import Cates from '@/components/Cates/index.svelte';
-  const defaultNav = {
-    label: 'Notes',
-    path: 'Notes',
-  }
-
-  function handleCateSelect() {}
 </script>
 
 <main class="container">
   <section class="sidebar">
     <Navs />
-    <Cates navInfo={defaultNav} onCateSelect={handleCateSelect} />
+    <Cates />
   </section>
   <section class="main">
     <Router {routes} />

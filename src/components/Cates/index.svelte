@@ -1,15 +1,18 @@
 <script lang="ts">
-  import type { IProps, ICateItem } from "./types";
+  import type { ICateItem } from "./types";
   import Icon from "@iconify/svelte";
   import getCates from "./controllers/get-cates";
   import createCate from "./controllers/create-cate";
-  let props: IProps = $props();
+  import { selectedNav } from "@/components/Navs/selected-nav.svelte";
+  import {
+    selectedCate,
+    setSelectedCate,
+  } from "./controllers/selected-cate.svelte";
   let dataSource = $state.raw([] as ICateItem[]);
-  let selectedCateName = $state("");
   let newCateName = "";
 
   $effect(() => {
-    getCates(props.navInfo.path).then((ret) => {
+    getCates(selectedNav).then((ret) => {
       console.log("cates ret", ret);
       if (ret.length === 0) {
         return;
@@ -18,10 +21,10 @@
         name: item.name,
         type: "cate",
       }));
-      selectedCateName = ret[0].name;
+      setSelectedCate(ret[0].name);
     });
 
-    props.navInfo.path;
+    selectedNav;
   });
 
   function handleAddCate() {
@@ -31,16 +34,15 @@
         name: "",
       },
     ].concat(dataSource);
-    selectedCateName = "";
+    setSelectedCate("");
   }
 
   function handleCateNameBlur() {
     const newCates = ([] as ICateItem[]).concat(dataSource);
-    const currentFirstCateName = newCates[0].name;
     if (!newCateName) {
       newCates.shift();
       dataSource = newCates;
-      selectedCateName = currentFirstCateName;
+      setSelectedCate(newCates[0].name);
       return;
     }
     createCate(newCateName)
@@ -50,24 +52,19 @@
           name: newCateName,
         };
         dataSource = newCates;
-        selectedCateName = newCateName;
+        setSelectedCate(newCateName);
       })
       .catch(() => {
         newCates.shift();
         dataSource = newCates;
-        selectedCateName = currentFirstCateName;
+        setSelectedCate(newCates[0].name);
       });
-  }
-
-  function handleCateSelect(cateName: string) {
-    selectedCateName = cateName;
-    props.onCateSelect(cateName);
   }
 </script>
 
 <div class="sidebar-cates">
   <div class="cates-header">
-    <span class="header-label">{props.navInfo.label}</span>
+    <span class="header-label">{selectedNav}</span>
     <Icon
       icon="mdi-light:folder-plus"
       style="font-size: 14px;color: var(--font-color)"
@@ -77,9 +74,12 @@
   <ul class="cates-list">
     {#each dataSource as cateItem}
       {@const cateName = cateItem.name}
-      {@const isSelected = cateName === selectedCateName}
+      {@const isSelected = cateName === selectedCate}
       <li class={`cate-item ${isSelected ? "cate-item-selected" : ""}`}>
-        <button class="cate-item-button" onclick={() => handleCateSelect(cateName)}>
+        <button
+          class="cate-item-button"
+          onclick={() => setSelectedCate(cateName)}
+        >
           <Icon
             icon="mdi-light:folder"
             style="font-size: 12px;color: var(--font-color);margin-right: 6px;"

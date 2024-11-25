@@ -10,7 +10,7 @@ const routes = {
     asyncComponent: (() => import('../pages/Read.svelte')) as unknown as AsyncSvelteComponent
   }),
   '/collection': wrap({
-    asyncComponent: (() => import('../pages/Collect.svelte')) as unknown as AsyncSvelteComponent
+    asyncComponent: (() => import('../pages/Collection.svelte')) as unknown as AsyncSvelteComponent
   })
 };
 
