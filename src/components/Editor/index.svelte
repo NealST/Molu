@@ -1,15 +1,15 @@
 <script lang="ts">
   import Header from "./Header.svelte";
   import Toolbar from "./Toolbar.svelte";
-  import Wysiwyg from "./Wysiwyg.svelte";
+  import Content from "./Content.svelte";
   import Outline from "./Outline.svelte";
 </script>
 
 <div class="editor">
   <Header />
   <Toolbar />
-  <div class="content">
-    <Wysiwyg />
+  <div class="editor-main">
+    <Content />
     <Outline />
   </div>
 </div>
@@ -19,11 +19,13 @@
     flex: 1;
     position: relative;
   }
-  .content {
+  .editor-main {
     width: 100%;
     height: 100vh;
     padding-top: 94px;
     display: flex;
     flex-direction: row;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 </style>

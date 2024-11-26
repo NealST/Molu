@@ -32,6 +32,8 @@
     border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
     font-size: 14px;
+    padding-left: 16px;
+    padding-right: 16px;
   }
 
   .divider {
