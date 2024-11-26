@@ -16,6 +16,8 @@
 </main>
 
 <style>
+@import 'normalize.css';
+
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -33,6 +35,15 @@
 :root {
   --font-color: #fff;
   --icon-size: 20px;
+}
+
+:global(*) {
+  box-sizing: border-box !important;
+}
+
+:global(button) {
+  outline: none;
+  border: none;
 }
 
 .container {

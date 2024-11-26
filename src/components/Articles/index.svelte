@@ -1,20 +1,17 @@
 <script lang="ts">
   import Icon from "@iconify/svelte";
   import type { IArticleItem } from "./types";
-  import { getSelectedCate } from "@/components/Cates/controllers/selected-cate.svelte";
-  import {
-    getSelectedArticle,
-    setSelectedArticle,
-  } from "./controllers/selected-article.svelte";
+  import selectedCate from "@/components/Cates/controllers/selected-cate.svelte";
+  import selectedArticle from "./controllers/selected-article.svelte";
   import getArticles from "./controllers/get-articles";
   import createArticle from "./controllers/create-article";
-  const selectedCate = getSelectedCate();
-  const selectedArticle = getSelectedArticle();
+  const selectedCateName = $derived(selectedCate.cate);
+  const selectedArticleName = $derived(selectedArticle.article);
   let dataSource = $state([] as IArticleItem[]);
   let newArticleName = $state("");
 
   $effect(() => {
-    getArticles(selectedCate).then((ret) => {
+    getArticles(selectedCateName).then((ret) => {
       console.log("articles ret", ret);
       if (ret.length === 0) {
         return;
@@ -24,10 +21,10 @@
         type: "article",
       }));
 
-      setSelectedArticle(ret[0].name);
+      selectedArticle.setArticle(ret[0].name);
     });
 
-    selectedCate;
+    selectedCateName;
   });
 
   function handleAddFile() {
@@ -37,7 +34,7 @@
         name: "",
       },
     ].concat(dataSource);
-    setSelectedArticle("");
+    selectedArticle.setArticle("");
   }
 
   function handleNameBlur() {
@@ -45,22 +42,22 @@
     if (!newArticleName) {
       newArticles.shift();
       dataSource = newArticles;
-      setSelectedArticle(newArticles[0].name);
+      selectedArticle.setArticle(newArticles[0]?.name || '');
       return;
     }
-    createArticle(selectedCate, newArticleName)
+    createArticle(selectedCate.cate, newArticleName)
       .then(() => {
         newArticles[0] = {
           type: "article",
           name: newArticleName,
         };
         dataSource = newArticles;
-        setSelectedArticle(newArticleName);
+        selectedArticle.setArticle(newArticleName);
       })
       .catch(() => {
         newArticles.shift();
         dataSource = newArticles;
-        setSelectedArticle(newArticles[0].name);
+        selectedArticle.setArticle(newArticles[0]?.name || '');
       });
   }
 </script>
@@ -68,13 +65,13 @@
 <div class="articles">
   <div class="articles-action">
     <input class="action-input" />
-    <Icon icon="mdi-light:file-plus" style="font-size: var(--icon-size);color: var(--font-color);" onclick={handleAddFile} />
+    <Icon icon="mdi-light:file-plus" style="font-size: var(--icon-size);color: var(--font-color);cursor:pointer;" onclick={handleAddFile} />
   </div>
   <div class="articles-list">
     {#each dataSource as articleItem}
       {@const articleName = articleItem.name}
-      {@const isSelected = articleName === selectedArticle}
-      <button class={`article-item ${isSelected ? "article-item-selected" : ""}`} onclick={() => setSelectedArticle(articleName)}>
+      {@const isSelected = articleName === selectedArticleName}
+      <button class={`article-item ${isSelected ? "article-item-selected" : ""}`} onclick={() => selectedArticle.setArticle(articleName)}>
         <Icon icon="mdi-light:file" style="font-size: var(--icon-size);color: var(--font-color);" />
         {#if articleItem.type === "input"}
           <input
@@ -120,5 +117,11 @@
     padding-right: 10px;
     display: flex;
     flex-direction: row;
+    background-color: #111;
+    margin-bottom: 8px;
+  }
+  .item-name {
+    font-size: 16px;
+    color: #fff;
   }
 </style>

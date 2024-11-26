@@ -1,9 +1,14 @@
-let selectedCate = $state("");
+const createSelectedCate = function() {
+  let cate = $state('');
 
-export const getSelectedCate = function() {
-  return selectedCate;
+  return {
+    get cate() {
+      return cate;
+    },
+    setCate: (newCate: string) => {
+      cate = newCate;
+    }
+  }
 }
 
-export const setSelectedCate = function(newCate: string) {
-  selectedCate = newCate;
-}
+export default createSelectedCate();

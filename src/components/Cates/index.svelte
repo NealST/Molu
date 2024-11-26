@@ -3,18 +3,14 @@
   import Icon from "@iconify/svelte";
   import getCates from "./controllers/get-cates";
   import createCate from "./controllers/create-cate";
-  import { getSelectedNav } from "@/components/Navs/selected-nav.svelte";
-  import {
-    getSelectedCate,
-    setSelectedCate,
-  } from "./controllers/selected-cate.svelte";
-  const selectedNav = getSelectedNav();
-  const selectedCate = getSelectedCate();
+  import selectedNav from "@/components/Navs/selected-nav.svelte";
+  import selectedCate from "./controllers/selected-cate.svelte";
+  const selectedNavName = $derived(selectedNav.nav);
   let dataSource = $state.raw([] as ICateItem[]);
   let newCateName = $state("");
 
   $effect(() => {
-    getCates(selectedNav).then((ret) => {
+    getCates(selectedNavName).then((ret) => {
       console.log("cates ret", ret);
       if (ret.length === 0) {
         return;
@@ -23,10 +19,10 @@
         name: item.name,
         type: "cate",
       }));
-      setSelectedCate(ret[0].name);
+      selectedCate.setCate(ret[0].name);
     });
 
-    selectedNav;
+    selectedNavName;
   });
 
   function handleAddCate() {
@@ -36,7 +32,7 @@
         name: "",
       },
     ].concat(dataSource);
-    setSelectedCate("");
+    selectedCate.setCate("");
   }
 
   function handleCateNameBlur() {
@@ -44,7 +40,7 @@
     if (!newCateName) {
       newCates.shift();
       dataSource = newCates;
-      setSelectedCate(newCates[0].name);
+      selectedCate.setCate(newCates[0]?.name || '');
       return;
     }
     createCate(newCateName)
@@ -54,37 +50,37 @@
           name: newCateName,
         };
         dataSource = newCates;
-        setSelectedCate(newCateName);
+        selectedCate.setCate(newCateName);
       })
       .catch(() => {
         newCates.shift();
         dataSource = newCates;
-        setSelectedCate(newCates[0].name);
+        selectedCate.setCate(newCates[0]?.name || '');
       });
   }
 </script>
 
 <div class="sidebar-cates">
   <div class="cates-header">
-    <span class="header-label">{selectedNav}</span>
+    <span class="header-label">{selectedNavName}</span>
     <Icon
       icon="mdi-light:folder-plus"
       style="font-size: var(--icon-size);color: var(--font-color);"
-      on:click={handleAddCate}
+      onclick={handleAddCate}
     />
   </div>
   <ul class="cates-list">
     {#each dataSource as cateItem}
       {@const cateName = cateItem.name}
-      {@const isSelected = cateName === selectedCate}
+      {@const isSelected = cateName === selectedCate.cate}
       <li class={`cate-item ${isSelected ? "cate-item-selected" : ""}`}>
         <button
           class="cate-item-button"
-          onclick={() => setSelectedCate(cateName)}
+          onclick={() => selectedCate.setCate(cateName)}
         >
           <Icon
             icon="mdi-light:folder"
-            style="font-size: 12px;color: var(--font-color);margin-right: 6px;"
+            style="font-size: 16px;color: var(--font-color);margin-right: 6px;"
           />
           {#if cateItem.type === "input"}
             <input
@@ -126,12 +122,14 @@
     margin-bottom: 8px;
   }
   .cate-item-button {
+    background-color: #111;
+    border: none;
     display: flex;
     flex-direction: row;
     align-items: center;
   }
   .item-name {
-    font-size: 12px;
+    font-size: 16px;
     color: var(--font-color);
   }
 </style>

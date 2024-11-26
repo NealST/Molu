@@ -17,6 +17,7 @@
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-fs": "~2",
     "@tauri-apps/plugin-shell": "^2",
+    "normalize.css": "^8.0.1",
     "svelte-spa-router": "^4.0.1"
   },
   "devDependencies": {

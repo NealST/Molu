@@ -1,10 +1,15 @@
 
-let selectedArticle = $state('');
+const createSelectedArticle = function() {
+  let article = $state('');
 
-export const getSelectedArticle = function() {
-  return selectedArticle;
+  return {
+    get article() {
+      return article;
+    },
+    setArticle(name: string) {
+      article = name;
+    }
+  }
 }
 
-export const setSelectedArticle = function(articleName: string) {
-  selectedArticle = articleName;
-};
+export default createSelectedArticle()

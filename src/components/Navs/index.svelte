@@ -1,7 +1,6 @@
 <script lang="ts">
   import { link } from "svelte-spa-router";
-  import { getSelectedNav, setSelectedNav } from "./selected-nav.svelte";
-  const selectedNav = getSelectedNav();
+  import selectedNav from "./selected-nav.svelte";
   const navs = [
     {
       path: "/",
@@ -20,13 +19,13 @@
 
 <div class="sidebar-navs">
   {#each navs as nav}
-    {@const isSelected = selectedNav === nav.name}
+    {@const isSelected = selectedNav.nav === nav.name}
     <div class="nav-item">
       <a
         class={`nav-item-button ${isSelected ? "nav-item-selected" : ""}`}
         use:link={nav.path}
         href={nav.path}
-        onclick={() => setSelectedNav(nav.name)}>{nav.name}</a
+        onclick={() => selectedNav.setNav(nav.name)}>{nav.name}</a
       >
     </div>
   {/each}

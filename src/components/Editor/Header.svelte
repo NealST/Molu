@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { getSelectedArticle } from "@/components/Articles/controllers/selected-article.svelte";
+  import selectedArticle from "@/components/Articles/controllers/selected-article.svelte";
   import Icon from "@iconify/svelte";
-  const selectedArticle = getSelectedArticle();
+  const selectedArticleName = $derived(selectedArticle.article);
 </script>
 
 <div class="header">
   <div class="header-info">
-    <span class="info-title">{selectedArticle}</span>
+    <span class="info-title">{selectedArticleName}</span>
     <span class="info-savetime"></span>
     <span class="info-count">字数:0</span>
   </div>
