@@ -35,6 +35,7 @@
 :root {
   --font-color: #fff;
   --icon-size: 20px;
+  --theme-color: #3dd988;
 }
 
 :global(*) {
