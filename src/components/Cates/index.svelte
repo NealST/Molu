@@ -21,8 +21,6 @@
       }));
       selectedCate.setCate(ret[0].name);
     });
-
-    selectedNavName;
   });
 
   function handleAddCate() {

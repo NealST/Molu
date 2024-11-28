@@ -23,8 +23,6 @@
 
       selectedArticle.setArticle(ret[0].name);
     });
-
-    selectedCateName;
   });
 
   function handleAddFile() {

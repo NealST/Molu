@@ -1,11 +1,22 @@
 <script lang="ts">
-  function handleInput(event: Event) {
+  import config from './config.svelte';
+  let editorEl;
+
+  $effect(() => {
     
-  }
+  });
+  
+  function handleInput(event: Event) {}
 </script>
 
 <div class="content">
-  <div class="editable" contenteditable="true" oninput={handleInput} spellcheck="false"></div>
+  <div
+    class="editable"
+    bind:this={editorEl}
+    contenteditable="true"
+    oninput={handleInput}
+    spellcheck="false"
+  ></div>
 </div>
 
 <style>
