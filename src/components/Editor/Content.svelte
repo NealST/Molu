@@ -1,4 +1,5 @@
 <script lang="ts">
+  import 'github-markdown-css/github-markdown.css';
   import { DEFAULT_STATE } from "@/mock/data";
   import blockMap from "./blocks";
   type BlockKey = keyof typeof blockMap;
@@ -17,7 +18,7 @@
     oninput={handleInput}
     spellcheck="false"
   >
-   <div class="content-container">
+   <div class="content-container markdown-body">
      {#each DEFAULT_STATE as stateItem}
        {@const itemName: BlockKey = (stateItem.name as BlockKey)}
        {@const Block = blockMap[itemName]}

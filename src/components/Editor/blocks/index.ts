@@ -1,7 +1,7 @@
 import Frontmatter from "./extra/Frontmatter.svelte";
 import AtxHeading from "./commonMark/AtxHeading.svelte";
 import Paragraph from "./commonMark/Paragraph.svelte";
-import SetexHeading from "./commonMark/SetexHeading.svelte";
+import SetextHeading from "./commonMark/SetextHeading.svelte";
 import Diagram from "./extra/Diagram.svelte";
 import CodeBlock from "./commonMark/CodeBlock.svelte";
 import Math from "./extra/Math.svelte";
@@ -19,7 +19,7 @@ const blockMap = {
   'frontmatter': Frontmatter,
   'atx-heading': AtxHeading,
   'paragraph': Paragraph,
-  'setext-heading': SetexHeading,
+  'setext-heading': SetextHeading,
   'diagram': Diagram,
   'code-block': CodeBlock,
   'math-block': Math,

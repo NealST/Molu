@@ -20,6 +20,9 @@ importers:
       '@tauri-apps/plugin-shell':
         specifier: ^2
         version: 2.0.1
+      github-markdown-css:
+        specifier: ^5.8.1
+        version: 5.8.1
       normalize.css:
         specifier: ^8.0.1
         version: 8.0.1
@@ -512,6 +515,10 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
+  github-markdown-css@5.8.1:
+    resolution: {integrity: sha512-8G+PFvqigBQSWLQjyzgpa2ThD9bo7+kDsriUIidGcRhXgmcaAWUIpCZf8DavJgc+xifjbCG+GvMyWr0XMXmc7g==}
+    engines: {node: '>=10'}
+
   globalyzer@0.1.0:
     resolution: {integrity: sha512-40oNTM9UfG6aBmuKxk/giHn5nQ8RVz/SS4Ir6zgzOv9/qC3kKZ9v4etGTcJbEl/NyVQH7FGU7d+X1egr57Md2Q==}
 
@@ -985,6 +992,8 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  github-markdown-css@5.8.1: {}
 
   globalyzer@0.1.0: {}
 

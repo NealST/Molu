@@ -1,17 +1,15 @@
 <script lang="ts">
   import type { IBlockStateItem } from "../types";
   const { meta, text = "" }: IBlockStateItem = $props();
-  const level = meta.level;
-  const tag = `h${level}`;
-  const prefixStr = new Array(level).fill("#").join("");
-  let theTitle = text.replace(prefixStr, "").trim();
+  const tag = `h${meta.level}`;
+  const textStrs = text.split("\n");
 
   function handleInput() {}
 
   function handleKeydown() {}
 </script>
 
-<svelte:element this={tag} class="atx-heading">
+<svelte:element this={tag} class="setex-heading">
   <span
     class="heading-text"
     role="button"
@@ -20,9 +18,13 @@
     oninput={handleInput}
     onkeydown={handleKeydown}
   >
-    <span class="text-prefix text-hide">{prefixStr}</span>
-    <span class="text-space text-hide"> </span>
-    <span class="text-value">{theTitle}</span>
+    {#each textStrs as textItem, index}
+      {@const isLast = index === textStrs.length - 1}
+      <span class="text-value">{textItem}</span>
+      {#if !isLast}
+        <span class="text-splitline"></span>
+      {/if}
+    {/each}
   </span>
 </svelte:element>
 
@@ -32,7 +34,7 @@
     word-break: break-word;
     outline: none;
   }
-  .text-hide {
-    display: none;
+  .text-value {
+    display: block;
   }
 </style>
