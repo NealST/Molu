@@ -1,8 +1,8 @@
 <script lang="ts">
   import Router from 'svelte-spa-router';
   import routes from './routes';
-  import Navs from '@/components/Navs/index.svelte';
-  import Cates from '@/components/Cates/index.svelte';
+  import Navs from '@/components/Navs/Index.svelte';
+  import Cates from '@/components/Cates/Index.svelte';
 </script>
 
 <main class="container">

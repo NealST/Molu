@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Articles from '@/components/Articles/index.svelte';
-  import Editor from '@/components/Editor/index.svelte';
+  import Articles from '@/components/Articles/Index.svelte';
+  import Editor from '@/components/Editor/Index.svelte';
 </script>
 
 <div class="home-panel">

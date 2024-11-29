@@ -1,11 +1,11 @@
 <script lang="ts">
-  import config from './config.svelte';
+  import { DEFAULT_STATE } from "@/mock/data";
+  import blockMap from "./blocks";
+  type BlockKey = keyof typeof blockMap;
   let editorEl;
 
-  $effect(() => {
-    
-  });
-  
+  $effect(() => {});
+
   function handleInput(event: Event) {}
 </script>
 
@@ -16,7 +16,15 @@
     contenteditable="true"
     oninput={handleInput}
     spellcheck="false"
-  ></div>
+  >
+   <div class="content-container">
+     {#each DEFAULT_STATE as stateItem}
+       {@const itemName: BlockKey = (stateItem.name as BlockKey)}
+       {@const Block = blockMap[itemName]}
+       <Block {...stateItem} />
+     {/each}
+   </div>
+</div>
 </div>
 
 <style>
@@ -25,5 +33,8 @@
   }
   .editable {
     outline: none;
+  }
+  .content-container {
+    width: 100%;
   }
 </style>
