@@ -3,6 +3,17 @@
   import routes from './routes';
   import Navs from '@/components/Navs/Index.svelte';
   import Cates from '@/components/Cates/Index.svelte';
+  import { invoke } from "@tauri-apps/api/core";
+
+  $effect(() => {
+    async function test() {
+      const startTime = Date.now();
+      const result = await invoke("greet", {name: 'test'});
+      const costTime = Date.now() - startTime;
+      console.log('costTime', costTime);
+    }
+    test();
+  });
 </script>
 
 <main class="container">
