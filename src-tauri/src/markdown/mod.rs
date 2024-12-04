@@ -15,12 +15,12 @@ mod tree;
 use std::borrow::Cow;
 use std::fmt::Display;
 
-pub use crate::parse::{
+pub use self::parse::{
   BrokenLink, BrokenLinkCallback, DefaultBrokenLinkCallback, OffsetIter, Parser, RefDefs,
 };
 
-pub use crate::strings::{CowStr, InlineStr};
-pub use crate::utils::*;
+pub use self::strings::{CowStr, InlineStr};
+pub use self::utils::*;
 
 // Codeblock type
 #[derive(Clone, Debug, PartialEq)]
