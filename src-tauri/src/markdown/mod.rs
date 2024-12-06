@@ -77,15 +77,13 @@
 #![cfg_attr(not(feature = "simd"), forbid(unsafe_code))]
 #![warn(missing_debug_implementations)]
 
-#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "html")]
 pub mod html;
 
 pub mod utils;
-pub mod to_ast;
 
+mod to_ast;
 mod entities;
 mod firstpass;
 mod linklabel;
@@ -94,22 +92,23 @@ mod puncttable;
 mod scanners;
 mod strings;
 mod tree;
+mod escape;
 
 use std::fmt::Display;
 
 pub use self::parse::{
     BrokenLink, BrokenLinkCallback, DefaultBrokenLinkCallback, OffsetIter, Parser, RefDefs,
 };
+pub use self::to_ast::{parse_markdown_to_ast, AstNode};
 pub use self::strings::{CowStr, InlineStr};
 pub use self::utils::*;
 
 /// Codeblock kind.
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum CodeBlockKind<'a> {
     Indented,
     /// The value contained in the tag describes the language of the code, which may be empty.
-    #[cfg_attr(feature = "serde", serde(borrow))]
+    #[serde(borrow)]
     Fenced(CowStr<'a>),
 }
 
@@ -131,8 +130,7 @@ impl<'a> CodeBlockKind<'a> {
 }
 
 /// BlockQuote kind (Note, Tip, Important, Warning, Caution).
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum BlockQuoteKind {
     Note,
     Tip,
@@ -142,16 +140,14 @@ pub enum BlockQuoteKind {
 }
 
 /// Metadata block kind.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
 pub enum MetadataBlockKind {
     YamlStyle,
     PlusesStyle,
 }
 
 /// Tags for elements that can contain other elements.
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum Tag<'a> {
     /// A paragraph of text and other inline elements.
     Paragraph,
@@ -182,7 +178,7 @@ pub enum Tag<'a> {
     Item,
     /// A footnote definition. The value contained is the footnote's label by which it can
     /// be referred to.
-    #[cfg_attr(feature = "serde", serde(borrow))]
+    #[serde(borrow)]
     FootnoteDefinition(CowStr<'a>),
 
     DefinitionList,
@@ -320,8 +316,7 @@ impl<'a> Tag<'a> {
 }
 
 /// The end of a `Tag`.
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Serialize, Deserialize)]
 pub enum TagEnd {
     Paragraph,
     Heading(HeadingLevel),
@@ -368,8 +363,7 @@ impl<'a> From<Tag<'a>> for TagEnd {
     }
 }
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Serialize, Deserialize)]
 pub enum HeadingLevel {
     H1 = 1,
     H2,
@@ -414,8 +408,7 @@ impl TryFrom<usize> for HeadingLevel {
 }
 
 /// Type specifier for inline links. See [the Tag::Link](enum.Tag.html#variant.Link) for more information.
-#[derive(Clone, Debug, PartialEq, Copy)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Debug, PartialEq, Copy, Serialize, Deserialize)]
 pub enum LinkType {
     /// Inline link like `[foo](bar)`
     Inline,
@@ -452,38 +445,37 @@ impl LinkType {
 /// Markdown events that are generated in a preorder traversal of the document
 /// tree, with additional `End` events whenever all of an inner node's children
 /// have been visited.
-#[derive(Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum Event<'a> {
     /// Start of a tagged element. Events that are yielded after this event
     /// and before its corresponding `End` event are inside this element.
     /// Start and end events are guaranteed to be balanced.
-    #[cfg_attr(feature = "serde", serde(borrow))]
+    #[serde(borrow)]
     Start(Tag<'a>),
     /// End of a tagged element.
     End(TagEnd),
     /// A text node.
-    #[cfg_attr(feature = "serde", serde(borrow))]
+    #[serde(borrow)]
     Text(CowStr<'a>),
     /// An inline code node.
-    #[cfg_attr(feature = "serde", serde(borrow))]
+    #[serde(borrow)]
     Code(CowStr<'a>),
     /// An inline math environment node.
-    #[cfg_attr(feature = "serde", serde(borrow))]
+    #[serde(borrow)]
     InlineMath(CowStr<'a>),
     /// A display math environment node.
-    #[cfg_attr(feature = "serde", serde(borrow))]
+    #[serde(borrow)]
     DisplayMath(CowStr<'a>),
     /// An HTML node.
-    #[cfg_attr(feature = "serde", serde(borrow))]
+    #[serde(borrow)]
     Html(CowStr<'a>),
     /// An inline HTML node.
-    #[cfg_attr(feature = "serde", serde(borrow))]
+    #[serde(borrow)]
     InlineHtml(CowStr<'a>),
     /// A reference to a footnote with given label, which may or may not be defined
     /// by an event with a `Tag::FootnoteDefinition` tag. Definitions and references to them may
     /// occur in any order.
-    #[cfg_attr(feature = "serde", serde(borrow))]
+    #[serde(borrow)]
     FootnoteReference(CowStr<'a>),
     /// A soft line break.
     SoftBreak,
@@ -516,8 +508,7 @@ impl<'a> Event<'a> {
 }
 
 /// Table column text alignment.
-#[derive(Copy, Clone, Debug, PartialEq)]
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
 
 pub enum Alignment {
     /// Default text alignment.

@@ -3,6 +3,7 @@ use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::ops::Deref;
 use std::str::from_utf8;
+use serde::{Deserialize, Serialize};
 
 const MAX_INLINE_STR_LEN: usize = 3 * std::mem::size_of::<isize>() - 2;
 
@@ -13,7 +14,7 @@ pub struct StringTooLongError;
 
 /// An inline string that can contain almost three words
 /// of utf-8 text.
-#[derive(Debug, Clone, Copy, Eq)]
+#[derive(Debug, Clone, Copy, Eq, Serialize, Deserialize)]
 pub struct InlineStr {
     inner: [u8; MAX_INLINE_STR_LEN],
     len: u8,
@@ -81,7 +82,7 @@ impl fmt::Display for InlineStr {
 /// or inlined.
 ///
 /// It is three words long.
-#[derive(Debug, Eq)]
+#[derive(Debug, Eq, Serialize, Deserialize)]
 pub enum CowStr<'a> {
     /// An owned, immutable string.
     Boxed(Box<str>),

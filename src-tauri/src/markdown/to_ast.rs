@@ -1,14 +1,24 @@
 // 转化为 ast
 use crate::markdown::{Parser, Event, Tag};
-use std::collections::HashMap;
+use tauri::ipc::{IpcResponse, InvokeResponseBody};
+use serde::Serialize;
 
-#[derive(Debug)]
-enum AstNode<'a> {
+#[derive(Debug, Serialize)]
+pub enum AstNode<'a> {
     Element { tag: Tag<'a>, children: Vec<AstNode<'a>> },
     Text(String),
     Code(String),
     Html(String),
     FootnoteReference(String),
+}
+// add ipcResponse to make astnode available to return to the frontend
+struct AstNodeWrapper<'a>(AstNode<'a>);
+
+impl IpcResponse for AstNodeWrapper<'_> {
+    fn body(self) -> Result<InvokeResponseBody, tauri::Error> {
+        let json = serde_json::to_string(&self.0)?;
+        Ok(InvokeResponseBody::Json(json))
+    }  
 }
 
 pub fn parse_markdown_to_ast(markdown_input: &str) -> AstNode {

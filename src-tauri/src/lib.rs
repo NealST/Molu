@@ -1,6 +1,6 @@
 mod markdown;
 
-use markdown::{Parser, Event};
+use markdown::{parse_markdown_to_ast, AstNode};
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
@@ -9,20 +9,10 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn getMdAst(input: &str) {
-  let parser = Parser::new(input);
-
-  for event in parser {
-    match event {
-        Event::Start(tag) => println!("Start: {:?}", tag),
-        Event::End(tag) => println!("End: {:?}", tag),
-        Event::Text(text) => println!("Text: {}", text),
-        Event::Code(code) => println!("Code: {}", code),
-        Event::Html(html) => println!("Html: {}", html),
-        Event::FootnoteReference(reference) => println!("FootnoteReference: {}", reference),
-        _ => (),
-    }
-  }
+fn get_md_ast(input: &str) -> AstNode {
+  let root = parse_markdown_to_ast(input);
+  println!("ast node: {:?}", root);
+  root
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -31,7 +21,7 @@ pub fn run() {
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![greet])
-        .invoke_handler(tauri::generate_handler![getMdAst])
+        .invoke_handler(tauri::generate_handler![get_md_ast])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

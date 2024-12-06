@@ -21,11 +21,12 @@
 //! HTML renderer that takes an iterator of events as input.
 
 use std::collections::HashMap;
+use crate::markdown;
 
-use self::strings::CowStr;
-use self::Event::*;
-use self::{Alignment, BlockQuoteKind, CodeBlockKind, Event, LinkType, Tag, TagEnd};
-use pulldown_cmark_escape::{
+use markdown::strings::CowStr;
+use markdown::Event::*;
+use markdown::{Alignment, BlockQuoteKind, CodeBlockKind, Event, LinkType, Tag, TagEnd};
+use markdown::escape::{
     escape_href, escape_html, escape_html_body_text, FmtWriter, IoWriter, StrWrite,
 };
 

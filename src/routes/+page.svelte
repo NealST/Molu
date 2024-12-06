@@ -16,8 +16,9 @@
     test();
   });
 
-  function handleTest() {
-    invoke("getMdAst", {input: TEST_MARKDOWN});
+  async function handleTest() {
+    const result = await invoke("get_md_ast", {input: TEST_MARKDOWN});
+    console.log('ast result', result);
   }
 </script>
 
