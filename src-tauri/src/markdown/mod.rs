@@ -84,6 +84,7 @@ use serde::{Deserialize, Serialize};
 pub mod html;
 
 pub mod utils;
+pub mod to_ast;
 
 mod entities;
 mod firstpass;

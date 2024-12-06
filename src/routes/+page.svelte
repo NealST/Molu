@@ -4,6 +4,7 @@
   import Navs from '@/components/Navs/Index.svelte';
   import Cates from '@/components/Cates/Index.svelte';
   import { invoke } from "@tauri-apps/api/core";
+  import { TEST_MARKDOWN } from '@/mock/data';
 
   $effect(() => {
     async function test() {
@@ -14,12 +15,17 @@
     }
     test();
   });
+
+  function handleTest() {
+    invoke("getMdAst", {input: TEST_MARKDOWN});
+  }
 </script>
 
 <main class="container">
   <section class="sidebar">
     <Navs />
     <Cates />
+    <button onclick={handleTest}>测试</button>
   </section>
   <section class="main">
     <Router {routes} />
