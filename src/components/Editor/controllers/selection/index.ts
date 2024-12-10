@@ -1,4 +1,5 @@
 import { isElement } from "../utils";
+import type { ICursor, INodeOffset, ISelection } from './types';
 
 const getCursorCoords = function () {
   const sel = document.getSelection();
@@ -49,5 +50,9 @@ export const getSelectionStart = function() {
 }
 
 export const getSelection = function() {
- 
+  const selection = document.getSelection();
+
+  if (!selection) {
+    return null;
+  }
 }
