@@ -1,13 +1,5 @@
 export const DEFAULT_STATE = [
   {
-    name: "frontmatter",
-    text: "title: muya",
-    meta: {
-      lang: "yaml", // yaml | toml | json
-      style: "-", // `-` for yaml | `+` for toml | `;;;` and `{}` for json
-    },
-  },
-  {
     name: "atx-heading",
     meta: {
       level: 1, // 1 ~ 6
@@ -17,15 +9,6 @@ export const DEFAULT_STATE = [
   {
     name: "paragraph",
     text: "**strong** *emphasis* `inline code` &gt; <u>underline</u> <mark>highlight</mark> <ruby>北京<rt>Beijing</rt></ruby> [Baidu](http://www.baidu.com) H0~2~ X^5^",
-  },
-  // Setext headings
-  {
-    name: "setext-heading",
-    meta: {
-      level: 1,
-      underline: "===", // === or ---
-    },
-    text: "GitHub and Extra\nInline format", // can contain multiple lines.
   },
   {
     name: "paragraph",
@@ -82,10 +65,6 @@ Bob --> Alice: Authentication Response
     meta: {
       mathStyle: "",
     },
-  },
-  {
-    name: "html-block",
-    text: "<div>\nfoo bar\n</div>",
   },
   // Table
   {
@@ -233,11 +212,6 @@ Bob --> Alice: Authentication Response
         ],
       },
     ],
-  },
-  // Thematic breaks
-  {
-    name: "thematic-break",
-    text: "---", // --- or ___ or ***
   },
   // Block quotes
   {

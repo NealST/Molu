@@ -1,6 +1,6 @@
 <script lang="ts">
   import 'github-markdown-css/github-markdown.css';
-  import { DEFAULT_STATE } from "@/mock/data";
+  import contentState from './controllers/state/content.svelte';
   import blockMap from "./blocks";
   type BlockKey = keyof typeof blockMap;
 
@@ -9,10 +9,10 @@
 
 <div class="content">
   <div class="content-container markdown-body">
-    {#each DEFAULT_STATE as stateItem}
-      {@const itemName: BlockKey = (stateItem.name as BlockKey)}
+    {#each contentState.data as contentItem, index (`${contentItem.name}-${index}`)}
+      {@const itemName: BlockKey = (contentItem.name as BlockKey)}
       {@const Block = blockMap[itemName]}
-      <Block {...stateItem} />
+      <Block data={contentItem} index={index} />
     {/each}
   </div>
 </div>

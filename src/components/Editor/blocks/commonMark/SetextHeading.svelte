@@ -1,6 +1,7 @@
 <script lang="ts">
-  import type { IBlockStateItem } from "../types";
-  const { meta, text = "" }: IBlockStateItem = $props();
+  import type { IBlockProps } from "../types";
+  const { data }: IBlockProps = $props();
+  const {meta, text = ''} = data;
   const tag = `h${meta.level}`;
   const textStrs = text.split("\n");
 

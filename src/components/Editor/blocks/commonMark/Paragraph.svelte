@@ -1,6 +1,6 @@
 <script lang="ts">
-    import type { IBlockStateItem } from "../types";
-    const { text = '' }: IBlockStateItem = $props();
+    import type { IBlockProps } from "../types";
+    const { data }: IBlockProps = $props();
 
     function handleInput() {}
 

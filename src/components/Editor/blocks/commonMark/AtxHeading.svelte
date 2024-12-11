@@ -1,15 +1,21 @@
 <script lang="ts">
-  import type { IBlockStateItem } from "../types";
-  const { meta, text = "" }: IBlockStateItem = $props();
-  let level = $state(meta.level);
+  import type { IBlockProps } from "../types";
+  import { EVENT_KEYS } from "../../controllers/config";
+  import { getKeyboardKey } from "../../controllers/utils";
+  import {
+    createParagraph,
+    createHeading,
+  } from "../../controllers/state/create-block";
+  import updateBlock from "../../controllers/state/update-block";
+  const { data, index: blockIndex }: IBlockProps = $props();
+  let level = $state(data.meta.level);
   let tag = $derived(`h${level}`);
   let contentDom: HTMLSpanElement;
-  let theTitle = text.replace(/^(\#*)/, "").trim();
+  let theTitle = $derived(data.text?.replace(/^(\#*)/, "").trim());
   const MODE_REG = /^(\#+)(\s+)([^\#]*)/;
 
   function handleInput() {
     const textContent = contentDom.textContent;
-    console.log("textContent", textContent);
     const modeMatch = textContent?.match(MODE_REG);
     if (!modeMatch) {
       return;
@@ -20,8 +26,38 @@
     }
   }
 
-  function handleKeydown() {
-    console.log('keydown fired');
+  function handleKeydown(event: KeyboardEvent) {
+    const pressKey = getKeyboardKey(event);
+    const textContent = contentDom.textContent;
+    const { anchorOffset } = document.getSelection() as Selection;
+    const curContentLen = textContent?.length;
+    if (pressKey === EVENT_KEYS["Enter"]) {
+      if (anchorOffset === 0) {
+        createParagraph(blockIndex);
+        return;
+      }
+      if (anchorOffset === curContentLen) {
+        createParagraph(blockIndex + 1);
+        return;
+      }
+      const preAnchorText = textContent?.slice(0, anchorOffset);
+      const afterAnchorText = textContent?.slice(anchorOffset);
+      updateBlock(
+        {
+          name: "atx-heading",
+          meta: {
+            level,
+          },
+          text: preAnchorText,
+        },
+        blockIndex
+      );
+      createHeading(blockIndex + 1, level, afterAnchorText);
+    }
+  }
+
+  function handleClick() {
+    console.log("cur selection", document.getSelection());
   }
 </script>
 
@@ -34,9 +70,10 @@
     bind:this={contentDom}
     oninput={handleInput}
     onkeydown={handleKeydown}
+    onclick={handleClick}
   >
     {theTitle}
-</span>
+  </span>
 </svelte:element>
 
 <style>

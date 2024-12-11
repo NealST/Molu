@@ -4,3 +4,8 @@ export interface IBlockStateItem {
   meta?: any;
   children?: IBlockStateItem[];
 };
+
+export interface IBlockProps {
+  index: number;
+  data: IBlockStateItem;
+}
