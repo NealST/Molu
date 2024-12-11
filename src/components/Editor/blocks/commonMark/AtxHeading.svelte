@@ -1,29 +1,42 @@
 <script lang="ts">
   import type { IBlockStateItem } from "../types";
   const { meta, text = "" }: IBlockStateItem = $props();
-  const level = meta.level;
-  const tag = `h${level}`;
-  const prefixStr = new Array(level).fill("#").join("");
-  let theTitle = text.replace(prefixStr, "").trim();
+  let level = $state(meta.level);
+  let tag = $derived(`h${level}`);
+  let contentDom: HTMLSpanElement;
+  let theTitle = text.replace(/^(\#*)/, "").trim();
+  const MODE_REG = /^(\#+)(\s+)([^\#]*)/;
 
-  function handleInput() {}
+  function handleInput() {
+    const textContent = contentDom.textContent;
+    console.log("textContent", textContent);
+    const modeMatch = textContent?.match(MODE_REG);
+    if (!modeMatch) {
+      return;
+    }
+    const theLevel = modeMatch[1].length;
+    if (theLevel !== level) {
+      level = theLevel;
+    }
+  }
 
-  function handleKeydown() {}
+  function handleKeydown() {
+    console.log('keydown fired');
+  }
 </script>
 
 <svelte:element this={tag} class="atx-heading">
   <span
     class="heading-text"
-    role="button"
-    tabindex="0"
+    role="heading"
+    aria-level={level}
     contenteditable="true"
+    bind:this={contentDom}
     oninput={handleInput}
     onkeydown={handleKeydown}
   >
-    <span class="text-prefix text-hide">{prefixStr}</span>
-    <span class="text-space text-hide"> </span>
-    <span class="text-value">{theTitle}</span>
-  </span>
+    {theTitle}
+</span>
 </svelte:element>
 
 <style>
@@ -31,8 +44,5 @@
     display: block;
     word-break: break-word;
     outline: none;
-  }
-  .text-hide {
-    display: none;
   }
 </style>

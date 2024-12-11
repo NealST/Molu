@@ -9,7 +9,7 @@
   $effect(() => {
     async function test() {
       const startTime = Date.now();
-      const result = await invoke("greet", {name: 'test'});
+      // const result = await invoke("greet", {name: 'test'});
       const costTime = Date.now() - startTime;
       console.log('costTime', costTime);
     }
