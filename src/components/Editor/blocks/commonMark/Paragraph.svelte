@@ -1,8 +1,22 @@
 <script lang="ts">
     import type { IBlockProps } from "../types";
-    const { data }: IBlockProps = $props();
+    import { commonMarkRules } from '../../controllers/rules';
+    const { data, index }: IBlockProps = $props();
+    const { text } = data;
+    let contentDom: HTMLSpanElement;
+    let contentHtml: string = $state(processText(text))
 
-    function handleInput() {}
+    function processText(content: string | undefined, mode = 'all') {
+      if (!content) {
+        return '';
+      }
+
+      return '';
+    }
+
+    function handleInput() {
+      
+    }
 
     function handleKeydown() {}
 </script>
@@ -10,9 +24,10 @@
 <p class="paragraph">
   <span
     class="paragraph-text"
-    role="button"
-    tabindex="0"
+    role="doc-part"
     contenteditable="true"
+    bind:this={contentDom}
+    bind:innerHTML={contentHtml}
     oninput={handleInput}
     onkeydown={handleKeydown}
   >

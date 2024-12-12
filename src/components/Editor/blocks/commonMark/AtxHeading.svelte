@@ -8,22 +8,36 @@
   } from "../../controllers/state/create-block";
   import updateBlock from "../../controllers/state/update-block";
   const { data, index: blockIndex }: IBlockProps = $props();
-  let level = $state(data.meta.level);
+  const prefixReg = /^(\#*)/;
+  const modeReg = /^(\#+)(\s+)([^\#]*)/;
+  let level = $derived(data.meta.level);
   let tag = $derived(`h${level}`);
   let contentDom: HTMLSpanElement;
-  let theTitle = $derived(data.text?.replace(/^(\#*)/, "").trim());
-  const MODE_REG = /^(\#+)(\s+)([^\#]*)/;
+  let theTitle = $derived(data.text?.replace(prefixReg, "").trim() || "");
+  $inspect(theTitle);
 
   function handleInput() {
     const textContent = contentDom.textContent;
-    const modeMatch = textContent?.match(MODE_REG);
+    const modeMatch = textContent?.match(modeReg);
     if (!modeMatch) {
       return;
     }
     const theLevel = modeMatch[1].length;
     if (theLevel !== level) {
-      level = theLevel;
+      updateBlock(
+        {
+          name: "atx-heading",
+          meta: {
+            level: theLevel,
+          },
+          text: textContent || "",
+        },
+        blockIndex
+      );
+      return;
     }
+    // in case that place equal # before the title
+    contentDom.innerHTML = contentDom.innerHTML.replace(prefixReg, "").trim();
   }
 
   function handleKeydown(event: KeyboardEvent) {
@@ -32,6 +46,7 @@
     const { anchorOffset } = document.getSelection() as Selection;
     const curContentLen = textContent?.length;
     if (pressKey === EVENT_KEYS["Enter"]) {
+      event.preventDefault();
       if (anchorOffset === 0) {
         createParagraph(blockIndex);
         return;
@@ -55,10 +70,6 @@
       createHeading(blockIndex + 1, level, afterAnchorText);
     }
   }
-
-  function handleClick() {
-    console.log("cur selection", document.getSelection());
-  }
 </script>
 
 <svelte:element this={tag} class="atx-heading">
@@ -70,7 +81,6 @@
     bind:this={contentDom}
     oninput={handleInput}
     onkeydown={handleKeydown}
-    onclick={handleClick}
   >
     {theTitle}
   </span>

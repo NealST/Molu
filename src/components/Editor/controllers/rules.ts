@@ -554,7 +554,6 @@ export const beginRules = {
   header: /(^ {0,3}#{1,6}(\s+|$))/,
   reference_definition:
     /^( {0,3}\[)([^\]]+?)(\\*)(\]: *)(<?)([^\s>]+)(>?)(?:( +)(["'(]?)([^\n"'()]+)\9)?( *)$/,
-
   // extra syntax (not belongs to GFM)
   multiple_math: /^(\$\$)$/,
 };
