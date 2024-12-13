@@ -10,7 +10,10 @@
       if (!content) {
         return '';
       }
-
+      const ruleKeys = Object.keys(commonMarkRules);
+      if (mode === 'all') {
+        
+      }
       return '';
     }
 

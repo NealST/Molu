@@ -565,11 +565,35 @@ export const endRules = {
 export type BeginRules = typeof beginRules;
 
 export const commonMarkRules = {
-  strong: /^(\*\*|__)(?=\S)([\s\S]*?[^\s\\])(\\*)\1(?!(\*|_))/, // can nest
-  em: /^(\*|_)(?=\S)([\s\S]*?[^\s*\\])(\\*)\1(?!\1)/, // can nest
-  inline_code: /^(`{1,3})([^`]+|.{2,})\1/,
-  image: /^(!\[)(.*?)(\\*)\]\((.*)(\\*)\)/,
-  link: /^(\[)((?:\[[^\]]*\]|[^[\]]|\](?=[^[]*\]))*?)(\\*)\]\((.*)(\\*)\)/, // can nest
+  strong: {
+    // can nest
+    reg: /^(\*\*|__)(?=\S)([\s\S]*?[^\s\\])(\\*)\1(?!(\*|_))/,
+    matchCb(match: string, p1: string, p2: string, p3: string) {
+      return `<strong>${p2.trim() || p3.trim()}</strong>`;
+    }
+  },
+  em: {
+    // can nest
+    reg: /^(\*|_)(?=\S)([\s\S]*?[^\s*\\])(\\*)\1(?!\1)/,
+    matchCb(match: string, p1: string, p2: string, p3: string) {
+      return `<em>${p2.trim() || p3.trim()}</em>`;
+    }
+  },
+  inline_code: {
+    reg: /^(`{1,3})([^`]+|.{2,})\1/,
+    matchCb(match: string, p1: string, p2: string) {
+      return `<code>${p2}</code>`;
+    }
+  },
+  image: {
+    reg: /^(!\[)(.*?)(\\*)\]\((.*)(\\*)\)/,
+    tag: 'img',
+  },
+  link: {
+    // can nest
+    reg: /^(\[)((?:\[[^\]]*\]|[^[\]]|\](?=[^[]*\]))*?)(\\*)\]\((.*)(\\*)\)/,
+    tag: 'a',
+  },
   reference_link: /^\[([^\]]+?)(\\*)\](?:\[([^\]]*?)(\\*)\])?/,
   reference_image: /^!\[([^\]]+?)(\\*)\](?:\[([^\]]*?)(\\*)\])?/,
   html_tag:
