@@ -567,43 +567,42 @@ export type BeginRules = typeof beginRules;
 export const commonMarkRules = {
   strong: {
     // can nest
-    reg: /^(\*\*|__)(?=\S)([\s\S]*?[^\s\\])(\\*)\1(?!(\*|_))/,
+    beginReg: /(\*\*|__)/,
+    reg: /(\*\*|__)(?=\S)([\s\S]*?[^\s\\])(\\*)\1(?!(\*|_))/g,
     matchCb(match: string, p1: string, p2: string, p3: string) {
-      return `<strong>${p2.trim() || p3.trim()}</strong>`;
+      return `<strong class="molu-strong">${p2.trim() || p3.trim()}</strong>`;
     }
   },
   em: {
     // can nest
-    reg: /^(\*|_)(?=\S)([\s\S]*?[^\s*\\])(\\*)\1(?!\1)/,
+    beginReg: /(\*|_)/,
+    reg: /(\*|_)(?=\S)([\s\S]*?[^\s*\\])(\\*)\1(?!\1)/g,
     matchCb(match: string, p1: string, p2: string, p3: string) {
-      return `<em>${p2.trim() || p3.trim()}</em>`;
+      return `<em class="molu-em">${p2.trim() || p3.trim()}</em>`;
     }
   },
   inline_code: {
-    reg: /^(`{1,3})([^`]+|.{2,})\1/,
+    beginReg: /`{1}([^`]+)/,
+    reg: /(`{1,3})([^`]+|.{2,})\1/g,
     matchCb(match: string, p1: string, p2: string) {
-      return `<code>${p2}</code>`;
+      return `<code class="molu-inline-code">${p2}</code>`;
     }
   },
   image: {
-    reg: /^(!\[)(.*?)(\\*)\]\((.*)(\\*)\)/,
-    tag: 'img',
+    beginReg: /(!\[)(.*?)(\\*)\]\(/,
+    reg: /(!\[)(.*?)(\\*)\]\((.*)(\\*)\)/g,
+    matchCb(match: string, p1: string, p2: string, p3: string, p4: string) {
+      return `<img class="molu-image" src="${p4}"></img>`;
+    }
   },
   link: {
     // can nest
-    reg: /^(\[)((?:\[[^\]]*\]|[^[\]]|\](?=[^[]*\]))*?)(\\*)\]\((.*)(\\*)\)/,
-    tag: 'a',
+    beginReg: /(\[)((?:\[[^\]]*\]|[^[\]]|\](?=[^[]*\]))*?)(\\*)\]\(/,
+    reg: /(\[)((?:\[[^\]]*\]|[^[\]]|\](?=[^[]*\]))*?)(\\*)\]\((.*)(\\*)\)/g,
+    matchCb(match: string, p1: string, p2: string, p3: string, p4: string) {
+      return `<a class="molu-link" href="${p4}">${p2}</a>`;
+    }
   },
-  reference_link: /^\[([^\]]+?)(\\*)\](?:\[([^\]]*?)(\\*)\])?/,
-  reference_image: /^!\[([^\]]+?)(\\*)\](?:\[([^\]]*?)(\\*)\])?/,
-  html_tag:
-    /^(<!--[\s\S]*?-->|(<([a-z][a-z\d-]*)[^\n<>]*>)(?:([\s\S]*?)(<\/\3 *>))?)/i, // raw html
-  html_escape: new RegExp(`^(${escapeCharacters.join("|")})`, "i"),
-  soft_line_break: /^(\n)(?!\n)/,
-  hard_line_break: /^( {2,})(\n)(?!\n)/,
-
-  // patched math marker `$`
-  backlash: /^(\\)([\\`*{}[\]()#+\-.!_>~:|<$])/,
 };
 
 export type CommonMarkRules = typeof commonMarkRules;
