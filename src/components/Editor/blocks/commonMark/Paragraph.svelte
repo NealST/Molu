@@ -4,10 +4,11 @@
     md2htmlRules,
     html2mdRules,
     type RuleKeys,
-  } from "../../controllers/utils/format";
-  import debounce from "../../controllers/utils/debounce";
+    debounce,
+    getNodeOffsetInParagraph,
+    getKeyboardKey,
+  } from "../../controllers/utils";
   import { EVENT_KEYS } from "../../controllers/config";
-  import { getKeyboardKey } from "../../controllers/utils";
   import { createParagraph } from "../../controllers/state/create-block";
   import updateBlock from "../../controllers/state/update-block";
   const { data, index: blockIndex }: IBlockProps = $props();
@@ -71,21 +72,24 @@
   function handleKeydown(event: KeyboardEvent) {
     const pressKey = getKeyboardKey(event);
     const textContent = contentDom.textContent;
-    const { anchorOffset } = document.getSelection() as Selection;
+    const { anchorNode, anchorOffset } = document.getSelection() as Selection;
+    if (!anchorNode) {
+      return;
+    }
     const curContentLen = textContent?.length;
-    
+    const anchorOffsetInParagraph = getNodeOffsetInParagraph(anchorNode, contentDom) + anchorOffset;
     if (pressKey === EVENT_KEYS["Enter"]) {
       event.preventDefault();
-      if (anchorOffset === 0) {
+      if (anchorOffsetInParagraph === 0) {
         createParagraph(blockIndex);
         return;
       }
-      if (anchorOffset === curContentLen) {
+      if (anchorOffsetInParagraph === curContentLen) {
         createParagraph(blockIndex + 1);
         return;
       }
-      const preAnchorText = textContent?.slice(0, anchorOffset);
-      const afterAnchorText = textContent?.slice(anchorOffset);
+      const preAnchorText = textContent?.slice(0, anchorOffsetInParagraph);
+      const afterAnchorText = textContent?.slice(anchorOffsetInParagraph);
       updateBlock(
         {
           name: "paragraph",
@@ -95,10 +99,6 @@
       );
       createParagraph(blockIndex + 1, afterAnchorText);
     }
-  }
-
-  function handleClick() {
-    console.log('cur selection', document.getSelection());
   }
 </script>
 
@@ -111,7 +111,6 @@
     bind:innerHTML={contentHtml}
     oninput={debounce(handleInput)}
     onkeydown={handleKeydown}
-    onclick={handleClick}
   >
   </span>
 </p>
