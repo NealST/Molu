@@ -7,7 +7,7 @@ export const DEFAULT_STATE = [
     text: "# Inline Format", // can not contain `\n`!
   },
   {
-    name: "paragraph",
+    name: "paragraph", 
     text: "**strong** *emphasis* `inline code` &gt; <u>underline</u> <mark>highlight</mark> <ruby>北京<rt>Beijing</rt></ruby> [Baidu](http://www.baidu.com) H0~2~ X^5^",
   },
   {
@@ -426,10 +426,6 @@ export const TEST_MARKDOWN = `
 # Inline Format
 
 **strong** *emphasis* \`inline code\` &gt; <u>underline</u> <mark>highlight</mark> <ruby>北京<rt>Beijing</rt></ruby> [Baidu](http://www.baidu.com) H0~2~ X^5^
-
-GitHub and Extra
-Inline format
-===
 
 :man:  ~~del~~ http://google.com $a \\ne b$
 `

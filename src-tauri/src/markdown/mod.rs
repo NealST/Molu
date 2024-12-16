@@ -94,7 +94,7 @@ mod strings;
 mod tree;
 mod escape;
 
-use std::fmt::Display;
+use std::fmt::{write, Display};
 
 pub use self::parse::{
     BrokenLink, BrokenLinkCallback, DefaultBrokenLinkCallback, OffsetIter, Parser, RefDefs,
@@ -250,6 +250,34 @@ impl<'a> Tag<'a> {
             Tag::DefinitionList => TagEnd::DefinitionList,
             Tag::DefinitionListTitle => TagEnd::DefinitionListTitle,
             Tag::DefinitionListDefinition => TagEnd::DefinitionListDefinition,
+        }
+    }
+    
+    pub fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Paragraph => write!(f, "paragraph"),
+            Self::Heading { level, .. } => write!(f, "heading"),
+            Self::Emphasis => write!(f, "em"),
+            Self::Strong => write!(f, "strong"),
+            Self::Link { .. } => write!(f, "link"),
+            Self::Image { .. } => write!(f, "image"),
+            Self::BlockQuote(kind) => write!(f, "quote"),
+            Self::CodeBlock(_) => write!(f, "codeBlock"),
+            Self::DefinitionList => write!(f, "definitionList"),
+            Self::DefinitionListTitle => write!(f, "definitionListTitle"),
+            Self::DefinitionListDefinition => write!(f, "definitionListDefinition"),
+            Self::FootnoteDefinition(_) => write!(f, "footnoteDefinition"),
+            Self::HtmlBlock => write!(f, "htmlBlock"),
+            Self::Item => write!(f, "item"),
+            Self::List(number) => write!(f, "list"),
+            Self::MetadataBlock(kind) => write!(f, "metadataBlock"),
+            Self::Strikethrough => write!(f, "strikethrough"),
+            Self::Subscript => write!(f, "subscript"),
+            Self::Superscript => write!(f, "superscript"),
+            Self::Table(_) => write!(f, "table"),
+            Self::TableCell => write!(f, "tableCell"),
+            Self::TableHead => write!(f, "tableHead"),
+            Self::TableRow => write!(f, "tableRow"),
         }
     }
 

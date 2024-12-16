@@ -11,6 +11,36 @@ pub enum AstNode<'a> {
     Html(String),
     FootnoteReference(String),
 }
+
+#[derive(Debug, Serialize)]
+enum HeadingLevel {
+  One = 1,
+  Two,
+  Three,
+  Four,
+  Five,
+  Six
+}
+
+#[derive(Debug, Serialize)]
+enum BlockType {
+  Heading,
+  Paragraph,
+}
+
+#[derive(Debug, Serialize)]
+struct Meta {
+  level: HeadingLevel,
+}
+
+#[derive(Debug, Serialize)]
+pub struct AstEle {
+  name: BlockType,
+  meta: Meta,
+  text: String,
+  children: Vec<AstEle>
+}
+
 // add ipcResponse to make astnode available to return to the frontend
 struct AstNodeWrapper<'a>(AstNode<'a>);
 
@@ -25,6 +55,8 @@ pub fn parse_markdown_to_ast(markdown_input: &str) -> AstNode {
     let parser = Parser::new(markdown_input);
     let mut stack: Vec<AstNode> = Vec::new();
     let mut root = AstNode::Element { tag: Tag::Paragraph, children: Vec::new() };
+    let mut newStack: Vec<AstEle> = Vec::new();
+    let mut result: Vec<AstEle> = Vec::new();
 
     for event in parser {
         match event {
@@ -38,6 +70,7 @@ pub fn parse_markdown_to_ast(markdown_input: &str) -> AstNode {
                         if let AstNode::Element { children, .. } = parent {
                             children.push(node);
                         }
+                        
                     } else {
                         if let AstNode::Element { children, .. } = &mut root {
                             children.push(node);
