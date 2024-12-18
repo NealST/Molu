@@ -1,20 +1,19 @@
 <script lang="ts">
-  import type { IBlockProps } from "../types";
-  import { EVENT_KEYS } from "../../controllers/config";
-  import { getKeyboardKey } from "../../controllers/utils";
+  import type { IBlockProps } from "./types";
+  import { EVENT_KEYS } from "../controllers/config";
+  import { getKeyboardKey } from "../controllers/utils";
   import {
     createParagraph,
     createHeading,
-  } from "../../controllers/state/create-block";
-  import updateBlock from "../../controllers/state/update-block";
+  } from "../controllers/state/create-block";
+  import updateBlock from "../controllers/state/update-block";
   const { data, index: blockIndex }: IBlockProps = $props();
   const prefixReg = /^(\#*)/;
   const modeReg = /^(\#+)(\s+)([^\#]*)/;
   let level = $derived(data.meta.level);
   let tag = $derived(`h${level}`);
   let contentDom: HTMLSpanElement;
-  let theTitle = $derived(data.text?.replace(prefixReg, "").trim() || "");
-  $inspect(theTitle);
+  let theTitle = $derived(data.text?.trim() || "");
 
   function handleInput() {
     const textContent = contentDom.textContent;

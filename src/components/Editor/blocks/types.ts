@@ -1,7 +1,8 @@
 export interface IBlockStateItem {
   name: string;
-  text?: string;
   meta?: any;
+  text?: string;
+  href?: string;
   children?: IBlockStateItem[];
 };
 

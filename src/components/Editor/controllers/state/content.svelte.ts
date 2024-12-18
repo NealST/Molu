@@ -1,8 +1,8 @@
-import { DEFAULT_STATE } from "@/mock/data";
+import { defaultState } from "@/mock/data";
 import type { IBlockStateItem } from "../../blocks/types";
 
 const createContentState = function () {
-  let data: IBlockStateItem[] = $state.raw(DEFAULT_STATE);
+  let data: IBlockStateItem[] = $state(defaultState);
 
   return {
     get data() {

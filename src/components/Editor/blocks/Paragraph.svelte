@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { IBlockProps } from "../types";
+  import type { IBlockProps, IBlockStateItem } from "./types";
   import {
     md2htmlRules,
     html2mdRules,
@@ -7,15 +7,27 @@
     debounce,
     getNodeOffsetInParagraph,
     getKeyboardKey,
-  } from "../../controllers/utils";
-  import { EVENT_KEYS } from "../../controllers/config";
-  import { createParagraph } from "../../controllers/state/create-block";
-  import updateBlock from "../../controllers/state/update-block";
+    transfromChild2Html,
+  } from "../controllers/utils";
+  import { EVENT_KEYS } from "../controllers/config";
+  import { createParagraph } from "../controllers/state/create-block";
+  import updateBlock from "../controllers/state/update-block";
   const { data, index: blockIndex }: IBlockProps = $props();
   let contentDom: HTMLSpanElement;
-  let contentHtml: string = $state(transform2Html(data.text, "all"));
+  let contentHtml: string = $state(transformChildren2Html(data.children || []));
 
-  function transform2Html(content: string | undefined, mode = "some") {
+  function transformChildren2Html(children: IBlockStateItem[]) {
+    if (children.length === 0) {
+      return "";
+    }
+    return children
+      .map((item) => {
+        return transfromChild2Html(item);
+      })
+      .join("");
+  }
+
+  function transform2Html(content: string | undefined) {
     if (!content) {
       return "";
     }
@@ -23,29 +35,18 @@
     const ruleKeys: Array<RuleKeys> = Object.keys(
       md2htmlRules
     ) as Array<RuleKeys>;
-    if (mode === "all") {
-      ruleKeys.forEach((item) => {
-        const rule = md2htmlRules[item];
-        const ruleReg = rule.reg;
-        if (!ruleReg.test(resultContent)) {
-          return;
+    ruleKeys.some((item) => {
+      const { beginReg, reg, matchCb } = md2htmlRules[item];
+      // if text matches the start rule, then end the execution.
+      // in case that em is prior to strong when matching.
+      if (beginReg.test(content)) {
+        if (reg.test(content)) {
+          resultContent = resultContent.replace(reg, matchCb);
         }
-        resultContent = resultContent.replace(ruleReg, rule.matchCb);
-      });
-    } else {
-      ruleKeys.some((item) => {
-        const { beginReg, reg, matchCb } = md2htmlRules[item];
-        // if text matches the start rule, then end the execution.
-        // in case that em is prior to strong when matching.
-        if (beginReg.test(content)) {
-          if (reg.test(content)) {
-            resultContent = resultContent.replace(reg, matchCb);
-          }
-          return true;
-        }
-        return false;
-      });
-    }
+        return true;
+      }
+      return false;
+    });
     return resultContent;
   }
 
@@ -77,7 +78,8 @@
       return;
     }
     const curContentLen = textContent?.length;
-    const anchorOffsetInParagraph = getNodeOffsetInParagraph(anchorNode, contentDom) + anchorOffset;
+    const anchorOffsetInParagraph =
+      getNodeOffsetInParagraph(anchorNode, contentDom) + anchorOffset;
     if (pressKey === EVENT_KEYS["Enter"]) {
       event.preventDefault();
       if (anchorOffsetInParagraph === 0) {
@@ -97,7 +99,7 @@
         },
         blockIndex
       );
-      createParagraph(blockIndex + 1, afterAnchorText);
+      // createParagraph(blockIndex + 1, afterAnchorText);
     }
   }
 </script>

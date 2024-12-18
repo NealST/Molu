@@ -1,3 +1,80 @@
+export const defaultState = [
+  {
+    name: 'heading',
+    meta: {
+      level: 1,
+    },
+    text: 'Inline Format'
+  },
+  {
+    name: 'paragraph',
+    children: [
+      {
+        name: 'strong',
+        text: 'strong'
+      },
+      {
+        name: 'plain',
+        text: ' ',
+      },
+      {
+        name: 'em',
+        text: 'emphasis'
+      },
+      {
+        name: 'plain',
+        text: ' ',
+      },
+      {
+        name: 'code',
+        text: 'inline code'
+      },
+      {
+        name: 'plain',
+        text: ' &gt; '
+      },
+      {
+        name: 'html',
+        text: '<u>underline</u>'
+      },
+      {
+        name: 'plain',
+        text: ' ',
+      },
+      {
+        name: 'html',
+        text: '<mark>highlight</mark>'
+      },
+      {
+        name: 'plain',
+        text: ' ',
+      },
+      {
+        name: 'html',
+        text: '<ruby>北京<rt>Beijing</rt></ruby>'
+      },
+      {
+        name: 'link',
+        text: 'Baidu',
+        href: 'http://www.baidu.com'
+      },
+      {
+        name: 'plain',
+        text: ' H0~2~ X^5^',
+      },
+    ]
+  },
+  {
+    name: 'paragraph',
+    children: [
+      {
+        name: 'plain',
+        text: ':man:  ~~del~~ http://google.com $a \\ne b$'
+      }
+    ]
+  }
+]
+
 export const DEFAULT_STATE = [
   {
     name: "atx-heading",

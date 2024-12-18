@@ -1,26 +1,25 @@
 // create a block
 import type { IBlockStateItem } from "../../blocks/types";
 import contentState from './content.svelte';
-import { BLOCK_TYPES } from '../config/index';
 
 // todo: support nested block creation
 const createBlock = function(newBlock: IBlockStateItem, index: number) {
-  const newParentContent = ([] as IBlockStateItem[]).concat(contentState.data);
+  const newParentContent = contentState.data;
   newParentContent.splice(index, 0, newBlock);
   contentState.setData(newParentContent);
 };
 
-export const createParagraph = function(index: number, text = '') {
+export const createParagraph = function(index: number) {
   const newParagraph = {
     name: 'paragraph',
-    text,
+    children: []
   };
   createBlock(newParagraph, index);
 };
 
 export const createHeading = function(index: number, level = 1, text = '') {
   const newHeading = {
-    name: "atx-heading",
+    name: "heading",
     meta: {
       level,
     },

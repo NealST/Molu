@@ -1,5 +1,5 @@
 export { default as debounce } from './debounce';
-export { md2htmlRules, html2mdRules, type RuleKeys } from './format';
+export { md2htmlRules, html2mdRules, type RuleKeys, transfromChild2Html } from './format';
 export { default as getNodeOffsetInParagraph } from './get-node-offset-in-paragraph';
 
 // get keyboard event press key

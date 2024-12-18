@@ -1,12 +1,34 @@
 // format markdown utils
 
+import type { IBlockStateItem } from '../../blocks/types';
+
+const getStrongHtml = function(text: string) {
+  return `<strong class="molu-strong">${text}</strong>`;
+}
+
+const getEmHtml = function(text: string) {
+  return `<em class="molu-em">${text}</em>`;
+}
+
+const getInlineCodeHtml = function(text: string) {
+  return `<code class="molu-inline-code">${text}</code>`;
+}
+
+const getImageHtml = function(imgUrl: string) {
+  return `<img class="molu-image" src="${imgUrl}"></img>`
+}
+
+const getLinkHtml = function(label: string, href: string) {
+  return `<a class="molu-link" href="${href}">${label}</a>`;
+}
+
 export const md2htmlRules = {
   strong: {
     // can nest
     beginReg: /(\*\*|__)/,
     reg: /(\*\*|__)(?=\S)([\s\S]*?[^\s\\])(\\*)\1(?!(\*|_))/g,
     matchCb(match: string, p1: string, p2: string, p3: string) {
-      return `<strong class="molu-strong">${p2.trim() || p3.trim()}</strong>`;
+      return getStrongHtml(p2.trim() || p3.trim());
     },
   },
   em: {
@@ -14,21 +36,21 @@ export const md2htmlRules = {
     beginReg: /(\*|_)/,
     reg: /(\*|_)(?=\S)([\s\S]*?[^\s*\\])(\\*)\1(?!\1)/g,
     matchCb(match: string, p1: string, p2: string, p3: string) {
-      return `<em class="molu-em">${p2.trim() || p3.trim()}</em>`;
+      return getEmHtml(p2.trim() || p3.trim());
     },
   },
   inline_code: {
     beginReg: /`{1}([^`]+)/,
     reg: /(`{1,3})([^`]+|.{2,})\1/g,
     matchCb(match: string, p1: string, p2: string) {
-      return `<code class="molu-inline-code">${p2}</code>`;
+      return getInlineCodeHtml(p2);
     },
   },
   image: {
     beginReg: /(!\[)(.*?)(\\*)\]\(/,
     reg: /(!\[)(.*?)(\\*)\]\((.*)(\\*)\)/g,
     matchCb(match: string, p1: string, p2: string, p3: string, p4: string) {
-      return `<img class="molu-image" src="${p4}"></img>`;
+      return getImageHtml(p4);
     },
   },
   link: {
@@ -36,7 +58,7 @@ export const md2htmlRules = {
     beginReg: /(\[)((?:\[[^\]]*\]|[^[\]]|\](?=[^[]*\]))*?)(\\*)\]\(/,
     reg: /(\[)((?:\[[^\]]*\]|[^[\]]|\](?=[^[]*\]))*?)(\\*)\]\((.*)(\\*)\)/g,
     matchCb(match: string, p1: string, p2: string, p3: string, p4: string) {
-      return `<a class="molu-link" href="${p4}">${p2}</a>`;
+      return getLinkHtml(p2, p4);
     },
   },
 };
@@ -75,3 +97,27 @@ export const html2mdRules = {
     },
   },
 };
+
+export const transfromChild2Html = function(child: IBlockStateItem) {
+  const { name, text = '', href = '' } = child;
+  let retHtml = ''
+  switch (name) {
+    case 'strong':
+      retHtml = getStrongHtml(text);
+      break;
+    case 'em':
+      retHtml = getEmHtml(text);
+      break;
+    case 'plain':
+    case 'html':
+      retHtml = text;
+      break;
+    case 'link':
+      retHtml = getLinkHtml(text, href);
+      break;
+    case 'code':
+      retHtml = getInlineCodeHtml(text);
+      break;
+  }
+  return retHtml;
+}
