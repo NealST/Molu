@@ -65,7 +65,7 @@ export const md2htmlRules = {
 
 export type RuleKeys = keyof typeof md2htmlRules;
 
-export const html2mdRules = {
+export const html2StateRules = {
   strong: {
     reg: /<strong(\s+)class="molu-strong">([^<]+)<\/strong>/g,
     matchCb(match: string, p1: string, p2: string) {

@@ -12,7 +12,8 @@
   import { EVENT_KEYS } from "../controllers/config";
   import { createParagraph } from "../controllers/state/create-block";
   import updateBlock from "../controllers/state/update-block";
-  const { data, index: blockIndex }: IBlockProps = $props();
+  const { data, index }: IBlockProps = $props();
+  let blockIndex = $derived(index);
   let contentDom: HTMLSpanElement;
   let contentHtml: string = $state(transformChildren2Html(data.children || []));
 
@@ -68,6 +69,7 @@
 
   function handleInput() {
     contentHtml = transform2Html(contentHtml || "");
+    
   }
 
   function handleKeydown(event: KeyboardEvent) {
@@ -90,16 +92,7 @@
         createParagraph(blockIndex + 1);
         return;
       }
-      const preAnchorText = textContent?.slice(0, anchorOffsetInParagraph);
-      const afterAnchorText = textContent?.slice(anchorOffsetInParagraph);
-      updateBlock(
-        {
-          name: "paragraph",
-          text: preAnchorText,
-        },
-        blockIndex
-      );
-      // createParagraph(blockIndex + 1, afterAnchorText);
+      
     }
   }
 </script>
