@@ -2,10 +2,9 @@
   import type { IBlockProps, IBlockStateItem } from "./types";
   import {
     md2htmlRules,
-    html2mdRules,
     type RuleKeys,
     debounce,
-    getNodeOffsetInParagraph,
+    getChildIndexInParagraph,
     getKeyboardKey,
     transfromChild2Html,
   } from "../controllers/utils";
@@ -16,6 +15,12 @@
   let blockIndex = $derived(index);
   let contentDom: HTMLSpanElement;
   let contentHtml: string = $state(transformChildren2Html(data.children || []));
+  let cursorInfo = {
+    // the child index in the children of this paragraph
+    childIndex: 0,
+    // the offset in this child
+    childOffset: 0,
+  };
 
   function transformChildren2Html(children: IBlockStateItem[]) {
     if (children.length === 0) {
@@ -37,12 +42,16 @@
       md2htmlRules
     ) as Array<RuleKeys>;
     ruleKeys.some((item) => {
-      const { beginReg, reg, matchCb } = md2htmlRules[item];
+      const { beginReg, reg, matchCb, toState } = md2htmlRules[item];
       // if text matches the start rule, then end the execution.
       // in case that em is prior to strong when matching.
       if (beginReg.test(content)) {
         if (reg.test(content)) {
-          resultContent = resultContent.replace(reg, matchCb);
+          resultContent = resultContent.replace(reg, (match: string, p1: string, p2: string, p3: string, p4: string) => {
+            const stateItem = toState(match, p1, p2, p3, p4);
+            
+            return matchCb(match, p1, p2, p3, p4);
+          });
         }
         return true;
       }
@@ -51,37 +60,13 @@
     return resultContent;
   }
 
-  function transform2Md(html: string) {
-    const ruleKeys: Array<RuleKeys> = Object.keys(
-      md2htmlRules
-    ) as Array<RuleKeys>;
-    let resultContent = html;
-    ruleKeys.forEach((item) => {
-      const rule = html2mdRules[item];
-      const ruleReg = rule.reg;
-      if (!ruleReg.test(resultContent)) {
-        return;
-      }
-      resultContent = resultContent.replace(ruleReg, rule.matchCb);
-    });
-    return resultContent;
-  }
-
   function handleInput() {
     contentHtml = transform2Html(contentHtml || "");
-    
+
   }
 
   function handleKeydown(event: KeyboardEvent) {
     const pressKey = getKeyboardKey(event);
-    const textContent = contentDom.textContent;
-    const { anchorNode, anchorOffset } = document.getSelection() as Selection;
-    if (!anchorNode) {
-      return;
-    }
-    const curContentLen = textContent?.length;
-    const anchorOffsetInParagraph =
-      getNodeOffsetInParagraph(anchorNode, contentDom) + anchorOffset;
     if (pressKey === EVENT_KEYS["Enter"]) {
       event.preventDefault();
       if (anchorOffsetInParagraph === 0) {
@@ -95,6 +80,17 @@
       
     }
   }
+
+  function getCursorInfo() {
+    const { anchorNode, anchorOffset } = document.getSelection() as Selection;
+    if (!anchorNode) {
+      return;
+    }
+    cursorInfo = {
+      childIndex: getChildIndexInParagraph(anchorNode, contentDom),
+      childOffset: anchorOffset,
+    };
+  }
 </script>
 
 <p class="paragraph">
@@ -106,6 +102,7 @@
     bind:innerHTML={contentHtml}
     oninput={debounce(handleInput)}
     onkeydown={handleKeydown}
+    onclick={getCursorInfo}
   >
   </span>
 </p>

@@ -56,7 +56,7 @@ export const defaultState = [
       {
         name: 'link',
         text: 'Baidu',
-        href: 'http://www.baidu.com'
+        url: 'http://www.baidu.com'
       },
       {
         name: 'plain',

@@ -41,7 +41,7 @@ const getNodeOffsetInParagraph = function (
   do {
     preSibling = preSibling.previousSibling;
     if (preSibling) {
-      offset += getTextContent(preSibling, ["molu-math", "molu-"]).length;
+      offset += getTextContent(preSibling, []).length;
     }
   } while (preSibling);
 
@@ -50,4 +50,22 @@ const getNodeOffsetInParagraph = function (
     : offset + getNodeOffsetInParagraph(node.parentNode!, paragraph);
 };
 
-export default getNodeOffsetInParagraph;
+const getChildIndexInParagraph = function(node: Node, paragraph: HTMLElement): number {
+  if (node === paragraph) return 0;
+  
+  let index = 0;
+  while(node.parentNode !== paragraph) {
+    node = node.parentNode as Node;
+  }
+  let preSibling: Node | null = node;
+  do {
+    preSibling = preSibling.previousSibling;
+    if (preSibling) {
+      index += 1;
+    }
+  } while (preSibling);
+
+  return index;
+}
+
+export default getChildIndexInParagraph;
