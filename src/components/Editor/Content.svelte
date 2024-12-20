@@ -9,7 +9,7 @@
 
 <div class="content">
   <div class="content-container markdown-body">
-    {#each contentState.data as contentItem, index (`${contentItem.name}-${index}`)}
+    {#each contentState.data as contentItem, index (contentItem.id)}
       {@const itemName: BlockKey = (contentItem.name as BlockKey)}
       {@const Block = blockMap[itemName]}
       <Block data={contentItem} index={index} />

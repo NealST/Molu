@@ -7,9 +7,10 @@
     createHeading,
   } from "../controllers/state/create-block";
   import updateBlock from "../controllers/state/update-block";
-  const { data, index: blockIndex }: IBlockProps = $props();
+  const { data, index }: IBlockProps = $props();
   const prefixReg = /^(\#*)/;
   const modeReg = /^(\#+)(\s+)([^\#]*)/;
+  let blockIndex = $derived(index);
   let level = $derived(data.meta.level);
   let tag = $derived(`h${level}`);
   let contentDom: HTMLSpanElement;
@@ -47,10 +48,12 @@
     if (pressKey === EVENT_KEYS["Enter"]) {
       event.preventDefault();
       if (anchorOffset === 0) {
+        console.log('start blockIndex', blockIndex);
         createParagraph(blockIndex);
         return;
       }
       if (anchorOffset === curContentLen) {
+        console.log('end blockIndex', blockIndex);
         createParagraph(blockIndex + 1);
         return;
       }

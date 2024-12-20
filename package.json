@@ -20,7 +20,8 @@
     "github-markdown-css": "^5.8.1",
     "html-tags": "^4.0.0",
     "normalize.css": "^8.0.1",
-    "svelte-spa-router": "^4.0.1"
+    "svelte-spa-router": "^4.0.1",
+    "uid": "^2.0.2"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.5",

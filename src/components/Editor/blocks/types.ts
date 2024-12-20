@@ -3,6 +3,7 @@ export interface IBlockStateItem {
   meta?: any;
   text?: string;
   href?: string;
+  id?: string;
   children?: IBlockStateItem[];
 };
 
