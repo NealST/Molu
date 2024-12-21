@@ -34,24 +34,20 @@ export const defaultState = [
         text: ' &gt; '
       },
       {
-        name: 'html',
-        text: '<u>underline</u>'
+        name: 'underline',
+        text: 'underline'
       },
       {
         name: 'plain',
         text: ' ',
       },
       {
-        name: 'html',
-        text: '<mark>highlight</mark>'
+        name: 'mark',
+        text: 'highlight'
       },
       {
         name: 'plain',
         text: ' ',
-      },
-      {
-        name: 'html',
-        text: '<ruby>北京<rt>Beijing</rt></ruby>'
       },
       {
         name: 'link',

@@ -11,11 +11,11 @@ const createBlock = function(newBlock: IBlockStateItem, index: number) {
   contentState.setData(newParentContent);
 };
 
-export const createParagraph = function(index: number) {
+export const createParagraph = function(index: number, initialChildren = [] as IBlockStateItem[]) {
   const newParagraph = {
     name: 'paragraph',
     id: uid(),
-    children: []
+    children: initialChildren,
   };
   createBlock(newParagraph, index);
 };

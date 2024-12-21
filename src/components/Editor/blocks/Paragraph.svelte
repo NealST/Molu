@@ -7,6 +7,7 @@
     getChildIndexInParagraph,
     getKeyboardKey,
     transfromChild2Html,
+    getNewChildren,
   } from "../controllers/utils";
   import { EVENT_KEYS } from "../controllers/config";
   import { createParagraph } from "../controllers/state/create-block";
@@ -14,7 +15,8 @@
   const { data, index }: IBlockProps = $props();
   let blockIndex = $derived(index);
   let contentDom: HTMLSpanElement;
-  let contentHtml: string = $state(transformChildren2Html(data.children || []));
+  let children = $derived(data.children || []);
+  let contentHtml: string = $state(transformChildren2Html(children));
   let cursorInfo = {
     // the child index in the children of this paragraph
     childIndex: 0,
@@ -49,7 +51,10 @@
         if (reg.test(content)) {
           resultContent = resultContent.replace(reg, (match: string, p1: string, p2: string, p3: string, p4: string) => {
             const stateItem = toState(match, p1, p2, p3, p4);
-            
+            updateBlock({
+              ...data,
+              children: getNewChildren(children, cursorInfo, stateItem)
+            }, blockIndex);
             return matchCb(match, p1, p2, p3, p4);
           });
         }
@@ -62,22 +67,55 @@
 
   function handleInput() {
     contentHtml = transform2Html(contentHtml || "");
-
   }
 
   function handleKeydown(event: KeyboardEvent) {
     const pressKey = getKeyboardKey(event);
     if (pressKey === EVENT_KEYS["Enter"]) {
       event.preventDefault();
-      if (anchorOffsetInParagraph === 0) {
-        createParagraph(blockIndex);
-        return;
-      }
-      if (anchorOffsetInParagraph === curContentLen) {
-        createParagraph(blockIndex + 1);
+      const { childIndex, childOffset } = cursorInfo;
+      const childState = children[childIndex];
+      const { text } = childState;
+      if (childOffset === text?.length) {
+        if (childIndex === (children.length - 1)) {
+          createParagraph(blockIndex + 1);
+          return;
+        }
+        const splitIndex = childIndex + 1;
+        updateBlock({
+          ...data,
+          children: children.slice(0, splitIndex)
+        }, blockIndex);
+        createParagraph(blockIndex + 1, children.slice(splitIndex));
         return;
       }
       
+      if (childOffset === 0) {
+        if (childIndex === 0) {
+          createParagraph(blockIndex);
+          return;
+        }
+        updateBlock({
+          ...data,
+          children: children.slice(0, childIndex)
+        }, blockIndex);
+        createParagraph(blockIndex + 1, children.slice(childIndex));
+        return;
+      }
+
+      const preAnchorText = text?.slice(0, childOffset);
+      const afterAnchorText = text?.slice(childOffset);
+      updateBlock({
+        ...data,
+        children: children.slice(0, childIndex).concat({
+          ...childState,
+          text: preAnchorText,
+        }),
+      }, blockIndex);
+      createParagraph(blockIndex, ([{
+        ...childState,
+        text: afterAnchorText,
+      }] as IBlockStateItem[]).concat(children.slice(childIndex + 1)));
     }
   }
 

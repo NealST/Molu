@@ -1,5 +1,5 @@
 export { default as debounce } from './debounce';
-export { md2htmlRules, type RuleKeys, transfromChild2Html } from './format';
+export { md2htmlRules, type RuleKeys, transfromChild2Html, getNewChildren } from './format';
 export { default as getChildIndexInParagraph } from './get-child-index';
 
 // get keyboard event press key
