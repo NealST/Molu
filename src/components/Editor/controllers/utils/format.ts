@@ -34,18 +34,20 @@ const getMarkHtml = function (text: string) {
   return `<mark class="molu-content-item molu-mark">${text}</mark>`;
 };
 
-export const md2htmlRules = {
+export const md2StateRules = {
   strong: {
     // can nest
     beginReg: /(\*\*|__)/,
     reg: /(\*\*|__)(?=\S)([\s\S]*?[^\s\\])(\\*)\1(?!(\*|_))/,
-    matchCb(match: string, p1: string, p2: string, p3: string) {
-      return getStrongHtml(p2.trim() || p3.trim());
+    toHtml(matches: RegExpMatchArray) {
+      const theText = matches[2] || matches[3];
+      return getStrongHtml(theText.trim());
     },
-    toState(match: string, p1: string, p2: string, p3: string) {
+    toState(matches: RegExpMatchArray) {
+      const theText = matches[2] || matches[3];
       return {
         name: "strong",
-        text: p2.trim() || p3.trim(),
+        text: theText.trim(),
       };
     },
   },
@@ -53,39 +55,41 @@ export const md2htmlRules = {
     // can nest
     beginReg: /(\*|_)/,
     reg: /(\*|_)(?=\S)([\s\S]*?[^\s*\\])(\\*)\1(?!\1)/,
-    matchCb(match: string, p1: string, p2: string, p3: string) {
-      return getEmHtml(p2.trim() || p3.trim());
+    toHtml(matches: RegExpMatchArray) {
+      const theText = matches[2] || matches[3];
+      return getEmHtml(theText.trim());
     },
-    toState(match: string, p1: string, p2: string, p3: string) {
+    toState(matches: RegExpMatchArray) {
+      const theText = matches[2] || matches[3];
       return {
         name: "em",
-        text: p2.trim() || p3.trim(),
+        text: theText.trim(),
       };
     },
   },
   inline_code: {
     beginReg: /`{1}([^`]+)/,
     reg: /(`{1,3})([^`]+|.{2,})\1/,
-    matchCb(match: string, p1: string, p2: string) {
-      return getInlineCodeHtml(p2);
+    toHtml(matches: RegExpMatchArray) {
+      return getInlineCodeHtml(matches[2]);
     },
-    toState(match: string, p1: string, p2: string) {
+    toState(matches: RegExpMatchArray) {
       return {
         name: "code",
-        text: p2,
+        text: matches[2],
       };
     },
   },
   image: {
     beginReg: /(!\[)(.*?)(\\*)\]\(/,
     reg: /(!\[)(.*?)(\\*)\]\((.*)(\\*)\)/,
-    matchCb(match: string, p1: string, p2: string, p3: string, p4: string) {
-      return getImageHtml(p4);
+    toHtml(matches: RegExpMatchArray) {
+      return getImageHtml(matches[4]);
     },
-    toState(match: string, p1: string, p2: string, p3: string, p4: string) {
+    toState(matches: RegExpMatchArray) {
       return {
         name: "image",
-        url: p4,
+        url: matches[4],
       };
     },
   },
@@ -93,20 +97,46 @@ export const md2htmlRules = {
     // can nest
     beginReg: /(\[)((?:\[[^\]]*\]|[^[\]]|\](?=[^[]*\]))*?)(\\*)\]\(/,
     reg: /(\[)((?:\[[^\]]*\]|[^[\]]|\](?=[^[]*\]))*?)(\\*)\]\((.*)(\\*)\)/,
-    matchCb(match: string, p1: string, p2: string, p3: string, p4: string) {
-      return getLinkHtml(p2, p4);
+    toHtml(matches: RegExpMatchArray) {
+      return getLinkHtml(matches[2], matches[4]);
     },
-    toState(match: string, p1: string, p2: string, p3: string, p4: string) {
+    toState(matches: RegExpMatchArray) {
       return {
         name: "link",
-        text: p2,
-        url: p4,
+        text: matches[2],
+        url: matches[4],
       };
     },
   },
+  underline: {
+    beginReg: /&lt;u&gt;/,
+    reg: /&lt;u&gt;([^(&lt;)]+)&lt;\/u&gt;/,
+    toHtml(matches: RegExpMatchArray) {
+      return getUnderlineHtml(matches[1]);
+    },
+    toState(matches: RegExpMatchArray) {
+      return {
+        name: 'underline',
+        text: matches[1],
+      };
+    }
+  },
+  mark: {
+    beginReg: /&lt;mark&gt;/,
+    reg: /&lt;mark&gt;([^(&lt;)]+)&lt;\/mark&gt;/,
+    toHtml(matches: RegExpMatchArray) {
+      return getMarkHtml(matches[1]);
+    },
+    toState(matches: RegExpMatchArray) {
+      return {
+        name: 'mark',
+        text: matches[1],
+      };
+    }
+  }
 };
 
-export type RuleKeys = keyof typeof md2htmlRules;
+export type RuleKeys = keyof typeof md2StateRules;
 
 export const transfromChild2Html = function (child: IBlockStateItem) {
   const { name, text = "", url = "" } = child;
@@ -132,6 +162,9 @@ export const transfromChild2Html = function (child: IBlockStateItem) {
       break;
     case "code":
       retHtml = getInlineCodeHtml(text);
+      break;
+    case "image":
+      retHtml = getImageHtml(url);
       break;
   }
   return retHtml;

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { IBlockProps, IBlockStateItem } from "./types";
   import {
-    md2htmlRules,
+    md2StateRules,
     type RuleKeys,
     debounce,
     getChildIndexInParagraph,
@@ -24,6 +24,10 @@
     childOffset: 0,
   };
 
+  $effect(() => {
+    contentHtml = transformChildren2Html(children);
+  });
+ 
   function transformChildren2Html(children: IBlockStateItem[]) {
     if (children.length === 0) {
       return "";
@@ -35,38 +39,36 @@
       .join("");
   }
 
-  function transform2Html(content: string | undefined) {
+  function checkForUpdate(content: string | undefined) {
     if (!content) {
       return "";
     }
-    let resultContent = content;
     const ruleKeys: Array<RuleKeys> = Object.keys(
-      md2htmlRules
+      md2StateRules
     ) as Array<RuleKeys>;
     ruleKeys.some((item) => {
-      const { beginReg, reg, matchCb, toState } = md2htmlRules[item];
+      const { beginReg, reg, toState } = md2StateRules[item];
       // if text matches the start rule, then end the execution.
       // in case that em is prior to strong when matching.
       if (beginReg.test(content)) {
         if (reg.test(content)) {
-          resultContent = resultContent.replace(reg, (match: string, p1: string, p2: string, p3: string, p4: string) => {
-            const stateItem = toState(match, p1, p2, p3, p4);
+          const matches = content.match(reg);
+          if (matches) {
+            const stateItem = toState(matches);
             updateBlock({
               ...data,
               children: getNewChildren(children, cursorInfo, stateItem)
             }, blockIndex);
-            return matchCb(match, p1, p2, p3, p4);
-          });
+          }
         }
         return true;
       }
       return false;
     });
-    return resultContent;
   }
 
   function handleInput() {
-    contentHtml = transform2Html(contentHtml || "");
+    checkForUpdate(contentHtml);
   }
 
   function handleKeydown(event: KeyboardEvent) {
@@ -112,7 +114,7 @@
           text: preAnchorText,
         }),
       }, blockIndex);
-      createParagraph(blockIndex, ([{
+      createParagraph(blockIndex + 1, ([{
         ...childState,
         text: afterAnchorText,
       }] as IBlockStateItem[]).concat(children.slice(childIndex + 1)));
@@ -144,3 +146,9 @@
   >
   </span>
 </p>
+
+<style>
+  .paragraph-content {
+    outline: none;
+  }
+</style>
