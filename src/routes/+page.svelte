@@ -55,6 +55,7 @@
   --theme-color: #3dd988;
   --editor-bg-color: #fff;
   --nav-bg-color: #fff;
+  --boder-color: #eaeaea;
 }
 
 @media (prefers-color-scheme: dark) {
