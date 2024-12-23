@@ -4,37 +4,37 @@
 
 <div class="toolbar">
   <div class="first">
-    <Icon icon="mdi-light:plus-box" width="24" height="24" />
+    <Icon icon="mdi-light:plus-box" width="24" height="24" style="color: var(--font-color);" />
   </div>
   <div class="divider"></div>
   <div class="action">
-    <Icon icon="mdi-light:undo-variant" width="24" height="24" />
-    <Icon icon="mdi-light:redo-variant" width="24" height="24" />
-    <Icon icon="ant-design:format-painter-outlined" width="22" height="22" />
-    <Icon icon="fluent:text-clear-formatting-20-regular" width="24" height="24" />
+    <Icon icon="mdi-light:undo-variant" width="24" height="24" style="color: var(--font-color);" />
+    <Icon icon="mdi-light:redo-variant" width="24" height="24" style="color: var(--font-color);" />
+    <Icon icon="ant-design:format-painter-outlined" width="22" height="22" style="color: var(--font-color);" />
+    <Icon icon="fluent:text-clear-formatting-20-regular" width="24" height="24" style="color: var(--font-color);" />
   </div>
   <div class="divider"></div>
   <div class="text">
-    <Icon icon="mdi-light:format-bold" width="24" height="24" />
-    <Icon icon="mdi-light:format-italic" width="24" height="24" />
-    <Icon icon="heroicons:strikethrough-solid" width="22" height="22" />
-    <Icon icon="mdi-light:format-underline" width="24" height="24" />
+    <Icon icon="mdi-light:format-bold" width="24" height="24" style="color: var(--font-color);" />
+    <Icon icon="mdi-light:format-italic" width="24" height="24" style="color: var(--font-color);" />
+    <Icon icon="heroicons:strikethrough-solid" width="22" height="22" style="color: var(--font-color);" />
+    <Icon icon="mdi-light:format-underline" width="24" height="24" style="color: var(--font-color);" />
   </div>
   <div class="divider"></div>
   <div class="color"></div>
   <div class="divider"></div>
   <div class="space">
-    <Icon icon="mdi-light:format-align-left" width="24" height="24" />
-    <Icon icon="mdi-light:format-list-bulleted" width="24" height="24" />
-    <Icon icon="mdi-light:format-list-numbered" width="24" height="24" />
-    <Icon icon="mdi-light:format-indent-increase" width="24" height="24" />
-    <Icon icon="mdi-light:format-line-spacing" width="24" height="24" />
+    <Icon icon="mdi-light:format-align-left" width="24" height="24" style="color: var(--font-color);" />
+    <Icon icon="mdi-light:format-list-bulleted" width="24" height="24" style="color: var(--font-color);" />
+    <Icon icon="mdi-light:format-list-numbered" width="24" height="24" style="color: var(--font-color);" />
+    <Icon icon="mdi-light:format-indent-increase" width="24" height="24" style="color: var(--font-color);" />
+    <Icon icon="mdi-light:format-line-spacing" width="24" height="24" style="color: var(--font-color);" />
   </div>
   <div class="divider"></div>
   <div class="inserts">
-    <Icon icon="mdi-light:link-variant" width="24" height="24" />
-    <Icon icon="mdi-light:format-quote-open" width="24" height="24" />
-    <Icon icon="mdi-light:minus" width="24" height="24" />
+    <Icon icon="mdi-light:link-variant" width="24" height="24" style="color: var(--font-color);" />
+    <Icon icon="mdi-light:format-quote-open" width="24" height="24" style="color: var(--font-color);" />
+    <Icon icon="mdi-light:minus" width="24" height="24" style="color: var(--font-color);" />
   </div>
   <div class="divider"></div>
   <div class="others"></div>

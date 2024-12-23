@@ -90,6 +90,7 @@
     padding-top: 10px;
     width: 200px;
     height: 100vh;
+    background-color: var(--nav-bg-color);
   }
   .articles-action {
     width: 100%;

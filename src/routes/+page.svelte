@@ -41,8 +41,7 @@
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
-  background-color: #f6f6f6;
-
+  
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -51,9 +50,20 @@
 }
 
 :root {
-  --font-color: #fff;
+  --font-color: #111;
   --icon-size: 20px;
   --theme-color: #3dd988;
+  --editor-bg-color: #fff;
+  --nav-bg-color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --font-color: #fff;
+    --editor-bg-color: #0d1117;
+    --border-color: #3d444d;
+    --nav-bg-color: #272727;
+  }
 }
 
 :global(*) {
@@ -65,7 +75,13 @@
   border: none;
 }
 
+:global(body) {
+  margin: 0;
+}
+
 .container {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
 }
@@ -73,18 +89,12 @@
 .sidebar {
   width: 150px;
   height: 100vh;
+  background-color: var(--nav-bg-color);
 }
 
 .main {
   display: flex;
   flex: 1;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #f6f6f6;
-    background-color: #2f2f2f;
-  }
 }
 
 </style>

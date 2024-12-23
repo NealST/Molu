@@ -18,6 +18,7 @@
   .editor {
     flex: 1;
     position: relative;
+    background-color: var(--editor-bg-color);
   }
   .editor-main {
     width: 100%;
